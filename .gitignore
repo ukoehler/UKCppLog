@@ -1,0 +1,12 @@
+# Ignore all folder start with build in the root of the respository
+/build*
+
+# Ignore contents of the log folder
+/log
+
+# Ignore KDevelop setup
+UKCppLog.kdev4
+/.kdev4
+
+# Ignore test output
+/testdata/output/
