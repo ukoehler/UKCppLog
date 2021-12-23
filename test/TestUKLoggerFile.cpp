@@ -37,11 +37,14 @@
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
  public:
-    const int testFunction(__attribute__((unused)) int argument) const {
+    int testFunction(__attribute__((unused)) int argument) const {
         UKLOG_ENTER("test class")
         return 42;
     }
 };
+
+// Keep code checker happy with declaring the function first
+void logTenTimes();
 
 void logTenTimes() {
     for (int i = 0; i < 10; i++) {
@@ -77,9 +80,9 @@ int main() {
     if (0 == dirExists(PROJECT_BIN_DIR PATH_SEPARATOR "log")) {
         system("mkdir " PROJECT_BIN_DIR PATH_SEPARATOR "log");
     }
-    std::cout << "Logging to " << PROJECT_BIN_DIR << PATH_SEPARATOR << "log" << PATH_SEPARATOR << "TestUKLoggerFile.txt"
+    std::cout << "Logging to " << LOG_FOLDER << PATH_SEPARATOR << "TestUKLoggerFile.txt"
               << std::endl;
-    uk::log::logger().setLogfileName(PROJECT_BIN_DIR PATH_SEPARATOR "log" PATH_SEPARATOR "TestUKLoggerFile.txt");
+    uk::log::logger().setLogfileName(LOG_FOLDER PATH_SEPARATOR "TestUKLoggerFile.txt");
     std::vector<std::thread> threads;
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));

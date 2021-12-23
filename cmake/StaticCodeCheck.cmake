@@ -30,10 +30,15 @@ function(add_static_code_checks_to_target TARGET)
     if(CODE_CHECKS)
         if(CLANG-TIDY-EXE)
             # header-filter: Check all, headers in this (or any?) src directory, ignore others (like cairo)
-            # llvm-header-guard: The header guard created by KDevelop is rather good
-            # llvm-include-order: in conflict with the other code checkers
-            # fuchsia-default-arguments-calls: I need to call functions with default arguments and that is fine for me
-            set_target_properties(${TARGET} PROPERTIES CXX_CLANG_TIDY "clang-tidy;-header-filter=./src/.*;-checks=*,-llvm-header-guard,-llvm-include-order,-fuchsia-default-arguments")
+            # -checks=*: activate all checks
+            # -modernize-use-trailing-return-type: there are conflicting rules for trailing-return-type
+            #   I prefer the old style for now
+            # -llvmlibc-*: I only use CLANG for checking. These checks are useless to me
+            # -llvm-header-guard: that header guard style is way too complex
+            # -fuchsia-default-arguments-calls: cannot really be avoided when using STL
+            # -altera-unroll-loops: keeps things understandable
+            # -llvm-include-order: not the order I want and conflicts with cpplint
+            set_target_properties(${TARGET_LIB} PROPERTIES CXX_CLANG_TIDY "${CLANG-TIDY-EXE};-header-filter=RecipeBook;-checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-altera-unroll-loops,-llvm-include-order")
         endif()
         if(CPPCHECK-EXE)
             set_target_properties(${TARGET} PROPERTIES CXX_CPPCHECK "cppcheck;--enable=all;")

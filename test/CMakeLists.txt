@@ -1,6 +1,8 @@
 #Add a test executables
 find_package(Threads REQUIRED)
 
+add_definitions(-D TEST_FOLDER=\\"${CMAKE_CURRENT_SOURCE_DIR}/../testdata/input\\" -D LOG_FOLDER=\\"${CMAKE_CURRENT_SOURCE_DIR}/../testdata/output\\")
+
 add_executable(testukcpplogscreen TestUKLoggerScreen.cpp)
 
 target_link_libraries(testukcpplogscreen PRIVATE ukcpplog Threads::Threads)
@@ -40,3 +42,15 @@ add_warning_compile_flags_to_target(testukcpplogfilecannotdelete)
 add_static_code_checks_to_target(testukcpplogfilecannotdelete)
 
 target_code_coverage(testukcpplogfilecannotdelete EXCLUDE */test/*)
+
+
+enable_testing()
+
+add_executable(UKLoggerLibTest UKLoggerLibTest.cpp)
+
+target_code_coverage( UKLoggerLibTest EXCLUDE */3rd_party/* */_deps/* */test/*)
+
+target_link_libraries(UKLoggerLibTest PRIVATE ukcpplog gtest)
+
+include(GoogleTest)
+gtest_discover_tests(UKLoggerLibTest)
