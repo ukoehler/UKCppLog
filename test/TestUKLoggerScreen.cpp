@@ -59,7 +59,7 @@ int main() {
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    for (auto & thread : threads) {
+    for (auto& thread : threads) {
         thread.join();
     }
 }
