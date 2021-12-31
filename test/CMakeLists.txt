@@ -48,6 +48,10 @@ enable_testing()
 
 add_executable(UKLoggerLibTest UKLoggerLibTest.cpp)
 
+add_warning_compile_flags_to_target(UKLoggerLibTest)
+
+add_static_code_checks_to_target(UKLoggerLibTest)
+
 target_code_coverage( UKLoggerLibTest EXCLUDE */3rd_party/* */_deps/* */test/*)
 
 target_link_libraries(UKLoggerLibTest PRIVATE ukcpplog gtest)
