@@ -37,11 +37,14 @@
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
  public:
-    const int testFunction(__attribute__((unused)) int argument) const {
+    int testFunction(__attribute__((unused)) int argument) const {
         UKLOG_ENTER("test class")
         return 42;
     }
 };
+
+// Keep code checker happy with declaring the function first
+void logTenTimes();
 
 void logTenTimes() {
     for (int i = 0; i < 10; i++) {
@@ -50,6 +53,9 @@ void logTenTimes() {
         UKLOG_INFO("test main", s.str())
     }
 }
+
+// Keep code checker happy with declaring the function first
+int dirExists(const char *path);
 
 int dirExists(const char *path) {
     struct stat info;
@@ -83,7 +89,7 @@ int main() {
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    for (auto & thread : threads) {
+    for (auto &thread : threads) {
         thread.join();
     }
 }

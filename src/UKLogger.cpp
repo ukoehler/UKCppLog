@@ -1,23 +1,23 @@
 /*
-* <Basic C++ logger library.>
-* Copyright 2020  Dr. Uwe Köhler <U.Koehler@gmx.de>
-*
-* This program is free software; you can redistribute it and/or
-* modify it under the terms of the GNU General Public License as
-* published by the Free Software Foundation; either version 2 of
-* the License or (at your option) version 3 or any later version
-* accepted by the membership of KDE e.V. (or its successor approved
-* by the membership of KDE e.V.), which shall act as a proxy
-* defined in Section 14 of version 3 of the license.
-*
-* This program is distributed in the hope that it will be useful,
-* but WITHOUT ANY WARRANTY; without even the implied warranty of
-* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-* GNU General Public License for more details.
-*
-* You should have received a copy of the GNU General Public License
-* along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
+ * <Basic C++ logger library.>
+ * Copyright 2020  Dr. Uwe Köhler <U.Koehler@gmx.de>
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License as
+ * published by the Free Software Foundation; either version 2 of
+ * the License or (at your option) version 3 or any later version
+ * accepted by the membership of KDE e.V. (or its successor approved
+ * by the membership of KDE e.V.), which shall act as a proxy
+ * defined in Section 14 of version 3 of the license.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
 
 #include "UKLogger.hpp"
 #include <algorithm>
@@ -30,21 +30,16 @@
 #include <sstream>
 #include <thread>
 
-namespace uk {
-namespace log {
+namespace uk::log {
 UKLogger::UKLogger() : mInitialBuffer(""), mFileStream(nullptr) {
     log("INFO", "Startup", static_cast<const char*>(__PRETTY_FUNCTION__),
         std::string("Create logger Version ") + VERSION_STRING, __LINE__);
-
-    // To try -fsanitize=address
-    //            int * buffer = new int(1000);
-    //            buffer[0] = 2000;
 }
 
 UKLogger::~UKLogger() { moveToTerminal(); }
 
 void UKLogger::log(const std::string& severity, const std::string& kind, const std::string& func,
-                const std::string& message, int line) {
+                   const std::string& message, int line) {
     // get current time
     auto now = std::chrono::system_clock::now();
 
@@ -87,44 +82,43 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     // remove function argument declaration
     openingBraket         = function.find('(');
     size_t closeingBraket = function.rfind(')');
-    if (openingBraket < closeingBraket && std::string::npos != openingBraket && std::string::npos != openingBraket) {
+    if (openingBraket < closeingBraket && std::string::npos != openingBraket) {
         function.erase(openingBraket + 1, closeingBraket - openingBraket - 1);
         function.insert(openingBraket + 1, "...");
     }
     // handle namespaces in function
     if (47 < function.size()) {
-        unsigned int numberOfDoubleColons = 0;
-        size_t nPos = 0;
-        size_t lastDoubleColon = 0;
-        size_t secondLastDoubleColon = 0;
+        unsigned int numberOfDoubleColons  = 0;
+        size_t       nPos                  = 0;
+        size_t       lastDoubleColon       = 0;
+        size_t       secondLastDoubleColon = 0;
         while ((nPos = function.find("::", nPos)) != std::string::npos) {
             numberOfDoubleColons++;
             secondLastDoubleColon = lastDoubleColon;
-            lastDoubleColon = nPos;
+            lastDoubleColon       = nPos;
             nPos += 2;
         }
-        if (47 > (function.size()-secondLastDoubleColon+1)) {
+        if (47 > (function.size() - secondLastDoubleColon + 1)) {
             function.erase(0, secondLastDoubleColon + 2);
             function = "..." + function;
         } else {
-            if (47 > (function.size()-lastDoubleColon+1)) {
+            if (47 > (function.size() - lastDoubleColon + 1)) {
                 function.erase(0, lastDoubleColon + 2);
                 function = "..." + function;
             }
         }
-//         size_t doubleColon = function.find("::");
-//         while (doubleColon < lastDoubleColon) {
-//             function.erase(0, doubleColon + 2);
-//             doubleColon = function.find("::");
-//         }
+        //         size_t doubleColon = function.find("::");
+        //         while (doubleColon < lastDoubleColon) {
+        //             function.erase(0, doubleColon + 2);
+        //             doubleColon = function.find("::");
+        //         }
     }
     s.clear();
     s.str("");
     s << std::setfill(' ') << timeStr << " " << std::left << std::setw(8) << severity << " "
-    << "[" << std::right << std::setw(6) << threadID << "] "
-    << "(" << std::left << std::setw(20) << kind.substr(0, 20) << ") "
-    << std::right << std::setw(47) << function.substr(0, 47) << " "
-    << std::right << std::setw(6) << line << ": " << message << std::endl;
+      << "[" << std::right << std::setw(6) << threadID << "] "
+      << "(" << std::left << std::setw(20) << kind.substr(0, 20) << ") " << std::right << std::setw(47)
+      << function.substr(0, 47) << " " << std::right << std::setw(6) << line << ": " << message << std::endl;
     std::lock_guard<std::mutex> lockGuard(mMutex);
     if (mFileOpen) {
         mFileStream << s.str() << std::flush;
@@ -150,7 +144,7 @@ void UKLogger::setLogfileName(const std::string& name) {
         UKLOG_FATAL("Startup", "Could not open logfile " + name + ". Quitting.");
         // std::cout << "UKLogger::setLogfileName should exit" << std::endl << std::flush;
         // std::cout << mInitialBuffer << std::flush;
-        // std::exit will call the destrector and moveToTerminal()
+        // std::exit will call the destructor and moveToTerminal()
         std::exit(EXIT_FAILURE);
     }
     std::lock_guard<std::mutex> lockGuard(mMutex);
@@ -170,5 +164,4 @@ UKLogger& logger() {
     static UKLogger inst;
     return inst;
 }
-}  // namespace log
-}  // namespace uk
+}  // namespace uk::log

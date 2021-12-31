@@ -37,31 +37,20 @@
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
  public:
-    const int testFunction(__attribute__((unused)) int argument) const {
+    int testFunction(__attribute__((unused)) int argument) const {
         UKLOG_ENTER("test class")
         return 42;
     }
 };
+
+// Keep code checker happy with declaring the function first
+void logTenTimes();
 
 void logTenTimes() {
     for (int i = 0; i < 10; i++) {
         std::ostringstream s;
         s << "Logging number " << i << " from a thread.";
         UKLOG_INFO("test main", s.str())
-    }
-}
-
-int dirExists(const char *path) {
-    struct stat info;
-
-    if (stat(path, &info) != 0) {
-        return 0;
-    } else {
-        if (0u != (info.st_mode & S_IFDIR)) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 }
 
@@ -82,7 +71,7 @@ int main() {
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    for (auto & thread : threads) {
+    for (auto &thread : threads) {
         thread.join();
     }
 }

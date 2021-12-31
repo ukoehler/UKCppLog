@@ -54,6 +54,9 @@ void logTenTimes() {
     }
 }
 
+// Keep code checker happy with declaring the function first
+int dirExists(const char *path);
+
 int dirExists(const char *path) {
     struct stat info;
 
@@ -80,8 +83,7 @@ int main() {
     if (0 == dirExists(PROJECT_BIN_DIR PATH_SEPARATOR "log")) {
         system("mkdir " PROJECT_BIN_DIR PATH_SEPARATOR "log");
     }
-    std::cout << "Logging to " << LOG_FOLDER << PATH_SEPARATOR << "TestUKLoggerFile.txt"
-              << std::endl;
+    std::cout << "Logging to " << LOG_FOLDER << PATH_SEPARATOR << "TestUKLoggerFile.txt" << std::endl;
     uk::log::logger().setLogfileName(LOG_FOLDER PATH_SEPARATOR "TestUKLoggerFile.txt");
     std::vector<std::thread> threads;
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
@@ -89,7 +91,7 @@ int main() {
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    for (auto & thread : threads) {
+    for (auto &thread : threads) {
         thread.join();
     }
 }

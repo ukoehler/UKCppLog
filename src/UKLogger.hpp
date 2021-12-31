@@ -28,8 +28,7 @@
 #include <sstream>
 #include <string>
 
-namespace uk {
-namespace log {
+namespace uk::log {
 
 /**
  * @brief Basic C++ logger class.
@@ -47,7 +46,7 @@ namespace log {
  * \remark In C++11 this class is fully thread save.
  */
 class UKLogger {
-   public:
+ public:
     /**
      * @brief Constructor.
      */
@@ -100,7 +99,7 @@ class UKLogger {
     // No move assignment
     UKLogger& operator=(const UKLogger&& other) = delete;
 
-   private:
+ private:
     void          moveToTerminal();
     std::mutex    mMutex;
     std::string   mInitialBuffer;
@@ -117,8 +116,7 @@ class UKLogger {
  */
 UKLogger& logger();
 
-}  // namespace log
-}  // namespace uk
+}  // namespace uk::log
 
 // future version of clang-tidy might not require the static_cast<const char*>(__PRETTY_FUNCTION__)
 // macros are no bueno, but __PRETTY_FUNCTION__ requires them here
