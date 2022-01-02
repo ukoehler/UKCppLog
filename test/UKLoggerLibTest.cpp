@@ -129,8 +129,8 @@ class logInfo {
         std::regex  re(timeRegexp + " ([A-Z ]{8}) \\[(.*)\\] \\((.{20})\\) (.{47}) (.{6}): (.*)");
         std::smatch match;
         if (std::regex_search(line, match, re) && match.size() > 7) {
-            std::cout << match[1] << "  " << match[2] << "  " << match[3] << "  " << match[4] << "  " << match[5]
-                      << "  " << match[6] << "  " << match[7] << std::endl;
+            // std::cout << match[1] << "  " << match[2] << "  " << match[3] << "  " << match[4] << "  " << match[5]
+            //           << "  " << match[6] << "  " << match[7] << std::endl;
             mTime = {};
             std::istringstream ss(match[1]);
             // ss.imbue(std::locale("de_DE.utf-8"));
@@ -194,17 +194,130 @@ TEST(UKLOGGER, LogToScreen) {
         logInfo info(segment);
     }
     EXPECT_EQ(61ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
-    // Check first line
+    // Check line 1
     logInfo info1(lines.at(0));
     // get current time
     auto    now     = std::chrono::system_clock::now();
     auto    timer   = std::chrono::system_clock::to_time_t(now);
     double  seconds = std::difftime(timer, std::mktime(&info1.mTime));
     EXPECT_GE(30, seconds);
+    EXPECT_EQ("INFO", trim(info1.mSeverity));
     EXPECT_EQ(std::string("Startup"), trim(info1.mKind));
     EXPECT_EQ(std::string("uk::log::UKLogger::UKLogger(...)"), trim(info1.mFunction));
     EXPECT_EQ(36, info1.mLine);
     EXPECT_EQ(std::string("Create logger Version ") + VERSION_STRING, trim(info1.mMessage));
+
+    // Check line 2
+    logInfo info2(lines.at(1));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info2.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("DEBUG", trim(info2.mSeverity));
+    EXPECT_EQ(std::string("test main"), trim(info2.mKind));
+    EXPECT_EQ(std::string("main(...)"), trim(info2.mFunction));
+    EXPECT_EQ(73, info2.mLine);
+    EXPECT_EQ("Debug", trim(info2.mMessage));
+
+    // Check line 3
+    logInfo info3(lines.at(2));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info3.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("INFO", trim(info3.mSeverity));
+    EXPECT_EQ(std::string("test main"), trim(info3.mKind));
+    EXPECT_EQ(std::string("main(...)"), trim(info3.mFunction));
+    EXPECT_EQ(74, info3.mLine);
+    EXPECT_EQ("Info", trim(info3.mMessage));
+
+    // Check line 4
+    logInfo info4(lines.at(3));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info4.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("WARN", trim(info4.mSeverity));
+    EXPECT_EQ(std::string("test main"), trim(info4.mKind));
+    EXPECT_EQ(std::string("main(...)"), trim(info4.mFunction));
+    EXPECT_EQ(75, info4.mLine);
+    EXPECT_EQ("Warn", trim(info4.mMessage));
+
+    // Check line 5
+    logInfo info5(lines.at(4));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info5.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("ERROR", trim(info5.mSeverity));
+    EXPECT_EQ(std::string("test main"), trim(info5.mKind));
+    EXPECT_EQ(std::string("main(...)"), trim(info5.mFunction));
+    EXPECT_EQ(76, info5.mLine);
+    EXPECT_EQ("Error", trim(info5.mMessage));
+
+    // Check line 6
+    logInfo info6(lines.at(5));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info6.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("FATAL", trim(info6.mSeverity));
+    EXPECT_EQ(std::string("test main"), trim(info6.mKind));
+    EXPECT_EQ(std::string("main(...)"), trim(info6.mFunction));
+    EXPECT_EQ(77, info6.mLine);
+    EXPECT_EQ("Fatal", trim(info6.mMessage));
+
+    // Check line 7
+    logInfo info7(lines.at(6));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info7.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("INFO", trim(info7.mSeverity));
+    EXPECT_EQ(std::string("Test1"), trim(info7.mKind));
+    EXPECT_EQ(std::string("...Test1::Log1(...)"), trim(info7.mFunction));
+    EXPECT_EQ(32, info7.mLine);
+    EXPECT_EQ("Log1", trim(info7.mMessage));
+
+    // Check line 8
+    logInfo info8(lines.at(7));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info8.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("INFO", trim(info8.mSeverity));
+    EXPECT_EQ(std::string("Test2"), trim(info8.mKind));
+    EXPECT_EQ(std::string("...Test2::Test2(...)"), trim(info8.mFunction));
+    EXPECT_EQ(41, info8.mLine);
+    EXPECT_EQ("Constructor", trim(info8.mMessage));
+
+    // Check line 9
+    logInfo info9(lines.at(8));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info9.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("INFO", trim(info9.mSeverity));
+    EXPECT_EQ(std::string("Test2"), trim(info9.mKind));
+    EXPECT_EQ(std::string("...Test2::Log2(...)"), trim(info9.mFunction));
+    EXPECT_EQ(47, info9.mLine);
+    EXPECT_EQ("Log2", trim(info9.mMessage));
+
+    // Check line 10
+    logInfo info10(lines.at(9));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info10.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("INFO", trim(info10.mSeverity));
+    EXPECT_EQ(std::string("Test2"), trim(info10.mKind));
+    EXPECT_EQ(std::string("...Test2::~Test2(...)"), trim(info10.mFunction));
+    EXPECT_EQ(44, info10.mLine);
+    EXPECT_EQ("Destructor", trim(info10.mMessage));
+
+    // Check line 11
+    logInfo info11(lines.at(10));
+    // get current time
+    seconds = std::difftime(timer, std::mktime(&info11.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ("TRACE", trim(info11.mSeverity));
+    EXPECT_EQ(std::string("test class"), trim(info11.mKind));
+    EXPECT_EQ(std::string("TestClass::testFunction(...)"), trim(info11.mFunction));
+    EXPECT_EQ(56, info11.mLine);
+    EXPECT_EQ("Enter int TestClass::testFunction(int) const", trim(info11.mMessage));
+
+    // Test thread safety and thread ids
 }
 
 int main(int argc, char** argv) {
