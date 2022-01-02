@@ -21,18 +21,13 @@
 
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <filesystem>
 #include <fstream>
 #include <iostream>
 #include <sstream>
 #include <thread>
 #include <vector>
 #include "../src/UKLogger.hpp"
-
-#if defined(WIN32) || defined(_WIN32)
-#define PATH_SEPARATOR "\\"
-#else
-#define PATH_SEPARATOR "/"
-#endif
 
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
@@ -72,7 +67,7 @@ int dirExists(const char *path) {
 }
 
 int main() {
-    UKLOG_INFO("test main", PROJECT_BIN_DIR)
+    UKLOG_INFO("test main", LOG_FOLDER)
     UKLOG_DEBUG("test main", "Debug")
     UKLOG_INFO("test main", "Info")
     UKLOG_WARN("test main", "Warn")
@@ -80,9 +75,10 @@ int main() {
     UKLOG_FATAL("test main", "Fatal")
     TestClass c;
     c.testFunction(42);
-    std::cout << "Logging to " << PATH_SEPARATOR << "var" << PATH_SEPARATOR << "log" << PATH_SEPARATOR << "btmp"
-              << std::endl;
-    uk::log::logger().setLogfileName(PATH_SEPARATOR "var" PATH_SEPARATOR "log" PATH_SEPARATOR "btmp");
+    std::filesystem::path logFileName(LOG_FOLDER);
+    logFileName /= "TestUKLoggerFileCannotDelete.log";
+    std::cout << "Logging to " << logFileName << std::endl;
+    uk::log::logger().setLogfileName(logFileName);
     std::vector<std::thread> threads;
     threads.emplace_back(std::thread([&] { logTenTimes(); }));
     threads.emplace_back(std::thread([&] { logTenTimes(); }));

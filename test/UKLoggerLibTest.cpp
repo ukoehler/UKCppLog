@@ -193,18 +193,17 @@ TEST(UKLOGGER, LogToScreen) {
         lines.push_back(segment);  // Spit string at newline character
         logInfo info(segment);
     }
-    EXPECT_EQ(57ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+    EXPECT_EQ(61ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
     // Check first line
     logInfo info1(lines.at(0));
     // get current time
-    std::this_thread::sleep_for(std::chrono::milliseconds(3000));
     auto    now     = std::chrono::system_clock::now();
     auto    timer   = std::chrono::system_clock::to_time_t(now);
     double  seconds = std::difftime(timer, std::mktime(&info1.mTime));
     EXPECT_GE(30, seconds);
     EXPECT_EQ(std::string("Startup"), trim(info1.mKind));
     EXPECT_EQ(std::string("uk::log::UKLogger::UKLogger(...)"), trim(info1.mFunction));
-    EXPECT_EQ(37, info1.mLine);
+    EXPECT_EQ(36, info1.mLine);
     EXPECT_EQ(std::string("Create logger Version ") + VERSION_STRING, trim(info1.mMessage));
 }
 

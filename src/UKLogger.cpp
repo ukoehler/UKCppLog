@@ -56,7 +56,6 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     std::string timeStr  = s.str();
     auto        threadID = std::this_thread::get_id();
     std::string function = func;
-
     // remove leading const
     if (0 == function.find("const ")) {
         function.erase(0, 6);

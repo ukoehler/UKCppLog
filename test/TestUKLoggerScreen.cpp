@@ -25,6 +25,30 @@
 #include <vector>
 #include "../src/UKLogger.hpp"
 
+namespace aa::bb::cc::dd::ee::ff::gg::hh::ii::jj::kk::ll::mm::nn::oo::pp::qq::rr::ss::tt::uu::vv::ww::xx::yy {
+class Test1 {
+ public:
+    static void Log1() {
+        UKLOG_INFO("Test1", "Log1");
+    }
+};
+}  // namespace aa::bb::cc::dd::ee::ff::gg::hh::ii::jj::kk::ll::mm::nn::oo::pp::qq::rr::ss::tt::uu::vv::ww::xx::yy
+
+namespace abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz::abcdefghijklmnopqrstuvwxyz {
+class Test2 {
+ public:
+    explicit Test2(__attribute__((unused)) int argument) {
+        UKLOG_INFO("Test2", "Constructor");
+    }
+    virtual ~Test2() {
+        UKLOG_INFO("Test2", "Destructor");
+    }
+    virtual inline void Log2(__attribute__((unused)) int argument) const noexcept{
+        UKLOG_INFO("Test2", "Log2");
+    }
+};
+}  // namespace abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz::abcdefghijklmnopqrstuvwxyz
+
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
  public:
@@ -51,6 +75,11 @@ int main() {
     UKLOG_WARN("test main", "Warn")
     UKLOG_ERROR("test main", "Error")
     UKLOG_FATAL("test main", "Fatal")
+    aa::bb::cc::dd::ee::ff::gg::hh::ii::jj::kk::ll::mm::nn::oo::pp::qq::rr::ss::tt::uu::vv::ww::xx::yy::Test1::Log1();
+    {
+        abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz::abcdefghijklmnopqrstuvwxyz::Test2 test2(42);
+        test2.Log2(1);
+    }
     TestClass c;
     c.testFunction(42);
     std::vector<std::thread> threads;
