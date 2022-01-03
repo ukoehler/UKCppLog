@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 #include <filesystem>
+#include <map>
 #include <regex>
 #include <sstream>
 #include <thread>
@@ -318,6 +319,24 @@ TEST(UKLOGGER, LogToScreen) {
     EXPECT_EQ("Enter int TestClass::testFunction(int) const", trim(info11.mMessage));
 
     // Test thread safety and thread ids
+    std::map<std::string, int> threadIDMap;
+    for (unsigned int i = 11; i < lines.size(); ++i) {
+        logInfo info(lines.at(i));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("INFO", trim(info.mSeverity));
+        EXPECT_EQ(std::string("test main"), trim(info.mKind));
+        EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
+        EXPECT_EQ(68, info.mLine);
+        if (0 == threadIDMap.count(info.mThreadID)) {
+            threadIDMap.insert({info.mThreadID, 1});
+        } else {
+            threadIDMap[info.mThreadID]++;
+        }
+    }
+    EXPECT_EQ(5ul, threadIDMap.size());
+    for (auto iter = threadIDMap.begin(); iter != threadIDMap.end(); ++iter) {
+        EXPECT_EQ(10, iter->second);
+    }
 }
 
 int main(int argc, char** argv) {
