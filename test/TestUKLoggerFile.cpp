@@ -32,7 +32,7 @@
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
  public:
-    int testFunction(__attribute__((unused)) int argument) const {
+    const int testFunction(__attribute__((unused)) int argument) const {
         UKLOG_ENTER("test class")
         return 42;
     }
@@ -46,23 +46,6 @@ void logTenTimes() {
         std::ostringstream s;
         s << "Logging number " << i << " from a thread.";
         UKLOG_INFO("test main", s.str())
-    }
-}
-
-// Keep code checker happy with declaring the function first
-int dirExists(const char *path);
-
-int dirExists(const char *path) {
-    struct stat info;
-
-    if (stat(path, &info) != 0) {
-        return 0;
-    } else {
-        if (0u != (info.st_mode & S_IFDIR)) {
-            return 1;
-        } else {
-            return 0;
-        }
     }
 }
 

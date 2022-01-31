@@ -38,54 +38,13 @@ class TestClass {
     }
 };
 
-// Keep code checker happy with declaring the function first
-void logTenTimes();
-
-void logTenTimes() {
-    for (int i = 0; i < 10; i++) {
-        std::ostringstream s;
-        s << "Logging number " << i << " from a thread.";
-        UKLOG_INFO("test main", s.str())
-    }
-}
-
-// Keep code checker happy with declaring the function first
-int dirExists(const char *path);
-
-int dirExists(const char *path) {
-    struct stat info;
-
-    if (stat(path, &info) != 0) {
-        return 0;
-    } else {
-        if (info.st_mode & S_IFDIR) {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
-}
-
 int main() {
     UKLOG_INFO("test main", LOG_FOLDER)
-    UKLOG_DEBUG("test main", "Debug")
-    UKLOG_INFO("test main", "Info")
-    UKLOG_WARN("test main", "Warn")
-    UKLOG_ERROR("test main", "Error")
-    UKLOG_FATAL("test main", "Fatal")
     TestClass c;
     c.testFunction(42);
     std::filesystem::path logFileName(LOG_FOLDER);
     logFileName /= "TestUKLoggerFileCannotDelete.log";
     std::cout << "Logging to " << logFileName << std::endl;
     uk::log::logger().setLogfileName(logFileName);
-    std::vector<std::thread> threads;
-    threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    threads.emplace_back(std::thread([&] { logTenTimes(); }));
-    for (auto &thread : threads) {
-        thread.join();
-    }
+    UKLOG_ERROR("test main", "We should never reach this line")
 }

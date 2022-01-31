@@ -16,6 +16,7 @@
 
 #include <gtest/gtest.h>
 #include <filesystem>
+#include <fstream>
 #include <map>
 #include <regex>
 #include <sstream>
@@ -179,12 +180,43 @@ std::string exec(const char* cmd) {
     }
     return result;
 }
+
+void checkLogLine(const std::string &lineStr, const time_t &timer,
+                  const std::string &severity, const std::string &kind,
+                  const std::string &function,
+                  int line, const std::string &message) {
+    logInfo info(lineStr);
+    double  seconds = std::difftime(timer, std::mktime(&info.mTime));
+    EXPECT_GE(30, seconds);
+    EXPECT_EQ(severity, trim(info.mSeverity));
+    EXPECT_EQ(kind, trim(info.mKind));
+    EXPECT_EQ(function, trim(info.mFunction));
+    EXPECT_EQ(line, info.mLine);
+    EXPECT_EQ(message, trim(info.mMessage));
+}
+
+void logPermissons(std::filesystem::perms p) {
+    std::stringstream ss;
+    ss  << ((p & std::filesystem::perms::owner_read) != std::filesystem::perms::none ? "r" : "-")
+        << ((p & std::filesystem::perms::owner_write) != std::filesystem::perms::none ? "w" : "-")
+        << ((p & std::filesystem::perms::owner_exec) != std::filesystem::perms::none ? "x" : "-")
+        << ((p & std::filesystem::perms::group_read) != std::filesystem::perms::none ? "r" : "-")
+        << ((p & std::filesystem::perms::group_write) != std::filesystem::perms::none ? "w" : "-")
+        << ((p & std::filesystem::perms::group_exec) != std::filesystem::perms::none ? "x" : "-")
+        << ((p & std::filesystem::perms::others_read) != std::filesystem::perms::none ? "r" : "-")
+        << ((p & std::filesystem::perms::others_write) != std::filesystem::perms::none ? "w" : "-")
+        << ((p & std::filesystem::perms::others_exec) != std::filesystem::perms::none ? "x" : "-")
+        << std::endl;
+    UKLOG_INFO("logPermissons", ss.str());
+}
+
 }  // namespace
 
 // Execution of the code is performed in external executables. Output is checked here
+// Test logging to screen
 TEST(UKLOGGER, LogToScreen) {
     std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogscreen");
-    UKLOG_INFO("TEST", output);
+    // UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
     // split output into lines
     std::stringstream        ss(output);
@@ -192,37 +224,26 @@ TEST(UKLOGGER, LogToScreen) {
     std::vector<std::string> lines;
     while (std::getline(ss, segment, '\n')) {
         lines.push_back(segment);  // Spit string at newline character
-        logInfo info(segment);
     }
     EXPECT_EQ(61ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
-    // Check line 1
-    logInfo info1(lines.at(0));
     // get current time
     auto    now     = std::chrono::system_clock::now();
     auto    timer   = std::chrono::system_clock::to_time_t(now);
-    double  seconds = std::difftime(timer, std::mktime(&info1.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("INFO", trim(info1.mSeverity));
-    EXPECT_EQ(std::string("Startup"), trim(info1.mKind));
-    EXPECT_EQ(std::string("uk::log::UKLogger::UKLogger(...)"), trim(info1.mFunction));
-    EXPECT_EQ(36, info1.mLine);
-    EXPECT_EQ(std::string("Create logger Version ") + VERSION_STRING, trim(info1.mMessage));
+    // Check line 1
+    checkLogLine(lines.at(0), timer, "INFO", "Startup",
+                 "uk::log::UKLogger::UKLogger(...)", 36,
+                 std::string("Create logger Version ") + VERSION_STRING);
+
 
     // Check line 2
-    logInfo info2(lines.at(1));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info2.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("DEBUG", trim(info2.mSeverity));
-    EXPECT_EQ(std::string("test main"), trim(info2.mKind));
-    EXPECT_EQ(std::string("main(...)"), trim(info2.mFunction));
-    EXPECT_EQ(73, info2.mLine);
-    EXPECT_EQ("Debug", trim(info2.mMessage));
+    checkLogLine(lines.at(1), timer, "DEBUG", "test main",
+                 "main(...)", 73,
+                 "Debug");
 
     // Check line 3
     logInfo info3(lines.at(2));
     // get current time
-    seconds = std::difftime(timer, std::mktime(&info3.mTime));
+    double seconds = std::difftime(timer, std::mktime(&info3.mTime));
     EXPECT_GE(30, seconds);
     EXPECT_EQ("INFO", trim(info3.mSeverity));
     EXPECT_EQ(std::string("test main"), trim(info3.mKind));
@@ -322,6 +343,7 @@ TEST(UKLOGGER, LogToScreen) {
     std::map<std::string, int> threadIDMap;
     for (unsigned int i = 11; i < lines.size(); ++i) {
         logInfo info(lines.at(i));
+        double seconds = std::difftime(timer, std::mktime(&info.mTime));
         EXPECT_GE(30, seconds);
         EXPECT_EQ("INFO", trim(info.mSeverity));
         EXPECT_EQ(std::string("test main"), trim(info.mKind));
@@ -337,6 +359,205 @@ TEST(UKLOGGER, LogToScreen) {
     for (auto iter = threadIDMap.begin(); iter != threadIDMap.end(); ++iter) {
         EXPECT_EQ(10, iter->second);
     }
+}
+
+// Execution of the code is performed in external executables. Output is checked here
+// Test logging to file
+TEST(UKLOGGER, LogToFile) {
+    std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogfile");
+    UKLOG_INFO("TEST", output);
+    EXPECT_FALSE(output.empty());
+    // split output into lines
+    std::stringstream        ss(output);
+    std::string              segment;
+    std::vector<std::string> lines;
+    while (std::getline(ss, segment, '\n')) {
+        lines.push_back(segment);  // Spit string at newline character
+    }
+    EXPECT_EQ(1ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+    std::filesystem::path logFileName(LOG_FOLDER);
+    logFileName /= "TestUKLoggerFile.log";
+    EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() + "\"\n", output);
+    std::fstream logFile;
+    logFile.open(logFileName, std::ios::in);
+    EXPECT_TRUE(logFile.is_open());
+    lines.clear();
+    if (logFile.is_open()) {
+        std::string line;
+        while (getline(logFile, line)) {
+            lines.push_back(line);
+            // UKLOG_INFO("TEST", line);
+        }
+    }
+    EXPECT_EQ(59ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+    // get current time
+    auto    now     = std::chrono::system_clock::now();
+    auto    timer   = std::chrono::system_clock::to_time_t(now);
+    // Check line 1
+    checkLogLine(lines.at(0), timer, "INFO", "Startup",
+                 "uk::log::UKLogger::UKLogger(...)", 36,
+                 std::string("Create logger Version ") + VERSION_STRING);
+
+    // Check line 2
+    checkLogLine(lines.at(1), timer, "INFO", "test main",
+                 "main(...)", 53,
+                 LOG_FOLDER);
+
+    // Check line 3
+    checkLogLine(lines.at(2), timer, "DEBUG", "test main",
+                 "main(...)", 54,
+                 "Debug");
+
+    // Check line 4
+    checkLogLine(lines.at(3), timer, "INFO", "test main",
+                 "main(...)", 55,
+                 "Info");
+
+    // Check line 5
+    checkLogLine(lines.at(4), timer, "WARN", "test main",
+                 "main(...)", 56,
+                 "Warn");
+
+    // Check line 6
+    checkLogLine(lines.at(5), timer, "ERROR", "test main",
+                 "main(...)", 57,
+                 "Error");
+
+    // Check line 7
+    checkLogLine(lines.at(6), timer, "FATAL", "test main",
+                 "main(...)", 58,
+                 "Fatal");
+
+    // Check line 8
+    checkLogLine(lines.at(7), timer, "TRACE", "test class",
+                 "TestClass::testFunction(...)", 36,
+                 "Enter const int TestClass::testFunction(int) const");
+
+    // Check line 9
+    std::filesystem::path expectedLogFileName(LOG_FOLDER);
+    expectedLogFileName /= "TestUKLoggerFile.log";
+    checkLogLine(lines.at(8), timer, "WARN", "Startup",
+                 "uk::log::UKLogger::setLogfileName(...)", 133,
+                 "Logfile " + expectedLogFileName.u8string() + " exists. Deleting.");
+
+    // Test thread safety and thread ids
+    std::map<std::string, int> threadIDMap;
+    for (unsigned int i = 9; i < lines.size(); ++i) {
+        logInfo info(lines.at(i));
+        double seconds = std::difftime(timer, std::mktime(&info.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("INFO", trim(info.mSeverity));
+        EXPECT_EQ(std::string("test main"), trim(info.mKind));
+        EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
+        EXPECT_EQ(48, info.mLine);
+        if (0 == threadIDMap.count(info.mThreadID)) {
+            threadIDMap.insert({info.mThreadID, 1});
+        } else {
+            threadIDMap[info.mThreadID]++;
+        }
+    }
+    EXPECT_EQ(5ul, threadIDMap.size());
+    for (auto iter = threadIDMap.begin(); iter != threadIDMap.end(); ++iter) {
+        EXPECT_EQ(10, iter->second);
+    }
+}
+
+// Execution of the code is performed in external executables. Output is checked here
+// Test logging to file, fail to open the file
+TEST(UKLOGGER, LogToFileFailOpen) {
+    std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogfilefailopen");
+    UKLOG_INFO("TEST", output);
+    EXPECT_FALSE(output.empty());
+    // split output into lines
+    std::stringstream        ss(output);
+    std::string              segment;
+    std::vector<std::string> lines;
+    while (std::getline(ss, segment, '\n')) {
+        lines.push_back(segment);  // Spit string at newline character
+    }
+    EXPECT_EQ(5ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+
+    // Check line 1
+    std::filesystem::path logFileName(LOG_FOLDER);
+    logFileName /= "Doesnotexist";
+    logFileName /= "TestUKLoggerFile.log";
+    EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
+
+    auto    now     = std::chrono::system_clock::now();
+    auto    timer   = std::chrono::system_clock::to_time_t(now);
+
+    checkLogLine(lines.at(1), timer, "INFO", "Startup",
+                 "uk::log::UKLogger::UKLogger(...)", 36,
+                 std::string("Create logger Version ") + VERSION_STRING);
+    checkLogLine(lines.at(2), timer, "INFO", "test main",
+                 "main(...)", 42,
+                 LOG_FOLDER);
+    checkLogLine(lines.at(3), timer, "TRACE", "test class",
+                 "TestClass::testFunction(...)", 36,
+                 "Enter int TestClass::testFunction(int) const");
+    checkLogLine(lines.at(4), timer, "FATAL", "Startup",
+                 "uk::log::UKLogger::setLogfileName(...)", 143,
+                 std::string("Could not open logfile ") + logFileName.u8string() + ". Quitting.");
+}
+
+// Execution of the code is performed in external executables. Output is checked here
+// Test logging to file, cannot delete existing file
+TEST(UKLOGGER, LogToFileCannotDelete) {
+    std::filesystem::path logFileName(LOG_FOLDER);
+    logFileName /= "TestUKLoggerFileCannotDelete.log";
+    std::ofstream outfile(logFileName);  // create file
+    outfile << "my text here!" << std::endl;
+    UKLOG_INFO("LogToFileCannotDelete", "Permissions of Lock file");
+    logPermissons(std::filesystem::status(logFileName).permissions());
+    UKLOG_INFO("LogToFileCannotDelete", "Permissions of Lock file folder before changes");
+    logPermissons(std::filesystem::status(LOG_FOLDER).permissions());
+    std::filesystem::perms oldPerms = std::filesystem::status(LOG_FOLDER).permissions();
+    std::filesystem::permissions(LOG_FOLDER,
+                    std::filesystem::perms::owner_write | std::filesystem::perms::group_write |
+                    std::filesystem::perms::others_write,
+                    std::filesystem::perm_options::remove);
+    UKLOG_INFO("LogToFileCannotDelete", "Permissions of Lock file folder after changes");
+    logPermissons(std::filesystem::status(LOG_FOLDER).permissions());
+
+    std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogfilecannotdelete");
+    UKLOG_INFO("TEST", output);
+    EXPECT_FALSE(output.empty());
+    // split output into lines
+    std::stringstream        ss(output);
+    std::string              segment;
+    std::vector<std::string> lines;
+    while (std::getline(ss, segment, '\n')) {
+        lines.push_back(segment);  // Spit string at newline character
+    }
+    EXPECT_EQ(6ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+
+    EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
+    auto    now     = std::chrono::system_clock::now();
+    auto    timer   = std::chrono::system_clock::to_time_t(now);
+
+    checkLogLine(lines.at(1), timer, "INFO", "Startup",
+                 "uk::log::UKLogger::UKLogger(...)", 36,
+                 std::string("Create logger Version ") + VERSION_STRING);
+    checkLogLine(lines.at(2), timer, "INFO", "test main",
+                 "main(...)", 42,
+                 LOG_FOLDER);
+    checkLogLine(lines.at(3), timer, "TRACE", "test class",
+                 "TestClass::testFunction(...)", 36,
+                 "Enter int TestClass::testFunction(int) const");
+    checkLogLine(lines.at(4), timer, "WARN", "Startup",
+                 "uk::log::UKLogger::setLogfileName(...)", 133,
+                 std::string("Logfile ") + logFileName.u8string() + " exists. Deleting.");
+    checkLogLine(lines.at(5), timer, "FATAL", "Startup",
+                 "uk::log::UKLogger::setLogfileName(...)", 135,
+                 std::string("Could not delete existing logfile ") + logFileName.u8string() + ". Quitting.");
+
+    std::filesystem::permissions(LOG_FOLDER,
+                    oldPerms,
+                    std::filesystem::perm_options::replace);
+    UKLOG_INFO("LogToFileCannotDelete", "Permissions of Lock file folder restored");
+    logPermissons(std::filesystem::status(LOG_FOLDER).permissions());
+    outfile.close();
+    std::filesystem::remove(logFileName);
 }
 
 int main(int argc, char** argv) {
