@@ -10,3 +10,6 @@ UKCppLog.kdev4
 
 # Ignore test output
 /testdata/output/
+
+# Ignore Visual Studio Code setup
+/.vscode

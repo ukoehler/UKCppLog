@@ -1,6 +1,6 @@
 #Add a library
 
-add_library(ukcpplog UKLogger.cpp)
+add_library(ukcpplog STATIC UKLogger.cpp)
 
 install(TARGETS ukcpplog 
     EXPORT ukcpplog
