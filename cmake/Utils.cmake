@@ -35,3 +35,12 @@ function(target_link_libraries_system target)
     endif()
   endforeach()
 endfunction(target_link_libraries_system)
+
+add_custom_target(show_version
+  COMMAND ${CMAKE_COMMAND} -E echo ""
+  COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_VERSION ${CMAKE_VERSION}"
+  COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_ID ${CMAKE_CXX_COMPILER_ID}"
+  COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_VERSION ${CMAKE_CXX_COMPILER_VERSION}"
+  COMMAND ${CMAKE_COMMAND} -E echo ""
+  VERBATIM
+)
