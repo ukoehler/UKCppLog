@@ -36,11 +36,24 @@ function(target_link_libraries_system target)
   endforeach()
 endfunction(target_link_libraries_system)
 
-add_custom_target(show_version
-  COMMAND ${CMAKE_COMMAND} -E echo ""
-  COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_VERSION ${CMAKE_VERSION}"
-  COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_ID ${CMAKE_CXX_COMPILER_ID}"
-  COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_VERSION ${CMAKE_CXX_COMPILER_VERSION}"
-  COMMAND ${CMAKE_COMMAND} -E echo ""
-  VERBATIM
-)
+if(DEFINED ENV{GITHUB_ACTIONS})
+  add_custom_target(show_version
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_VERSION ${CMAKE_VERSION}"
+    COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_ID ${CMAKE_CXX_COMPILER_ID}"
+    COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_VERSION ${CMAKE_CXX_COMPILER_VERSION}"
+    COMMAND ${CMAKE_COMMAND} -E echo "Running in GitHub Actions"
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    VERBATIM
+  )
+else()
+  add_custom_target(show_version
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_VERSION ${CMAKE_VERSION}"
+    COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_ID ${CMAKE_CXX_COMPILER_ID}"
+    COMMAND ${CMAKE_COMMAND} -E echo "CMAKE_CXX_COMPILER_VERSION ${CMAKE_CXX_COMPILER_VERSION}"
+    COMMAND ${CMAKE_COMMAND} -E echo "Running locally"
+    COMMAND ${CMAKE_COMMAND} -E echo ""
+    VERBATIM
+  )
+endif()

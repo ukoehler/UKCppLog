@@ -12,9 +12,11 @@ set(VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 add_definitions(-D VERSION_STRING=\\"${VERSION_STRING}\\" -D PROJECT_BIN_DIR=\\"${PROJECT_BINARY_DIR}\\")
 set(CMAKE_CXX_STANDARD 17)
 
-# lets see what is actually happening under the hood this is helpful when
-# running into problems
-set(CMAKE_VERBOSE_MAKEFILE ON)
+if(NOT DEFINED ENV{GITHUB_ACTIONS})
+    # lets see what is actually happening under the hood this is helpful when
+    # running into problems
+    set(CMAKE_VERBOSE_MAKEFILE ON)
+endif()
 # Some init settings
 set(CMAKE_COLOR_MAKEFILE ON)
 # Set path to additional CMake modules
