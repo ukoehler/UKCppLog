@@ -4,5 +4,5 @@
 [![Ubuntu](https://github.com/nlohmann/json/workflows/Ubuntu/badge.svg)](https://github.com/ukoehler/UKCppLog/actions?query=workflow%3AUbuntu)
 [![macOS](https://github.com/nlohmann/json/workflows/macOS/badge.svg)](https://github.com/ukoehler/UKCppLog/actions?query=workflow%3AmacOS)
 
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ukoehler/UKCppLog/CMake)
+![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ukoehler/UKCppLog/CMake/Build)
 [![Actions Status](https://github.com/ukoehler/UKCppLog/workflows/CMake/badge.svg)](https://github.com/ukoehler/UKCppLog/actions)
