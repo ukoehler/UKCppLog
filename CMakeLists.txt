@@ -9,7 +9,8 @@ set(AUTHOR "Uwe Köhler")
 set(VERSION_STRING "${PROJECT_VERSION_MAJOR}.${PROJECT_VERSION_MINOR}")
 # from CMake 3.12
 #add_compile_definitions(VERSION_STRING ${VERSION_STRING} )
-add_definitions(-D VERSION_STRING=\\"${VERSION_STRING}\\" -D PROJECT_BIN_DIR=\\"${PROJECT_BINARY_DIR}\\")
+# inner "" to get C++ to treat definition as a string, outer "" to handle spaces
+add_definitions(-D VERSION_STRING="\\"${VERSION_STRING}\\"" -D PROJECT_BIN_DIR="\\"${PROJECT_BINARY_DIR}\\"")
 set(CMAKE_CXX_STANDARD 17)
 
 if(NOT DEFINED ENV{GITHUB_ACTIONS})

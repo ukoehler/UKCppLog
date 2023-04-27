@@ -215,8 +215,9 @@ void logPermissons(std::filesystem::perms p) {
 // Execution of the code is performed in external executables. Output is checked here
 // Test logging to screen
 TEST(UKLOGGER, LogToScreen) {
-    std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogscreen");
-    // UKLOG_INFO("TEST", output);
+    UKLOG_INFO("TEST", PROJECT_BIN_DIR "/test/testukcpplogscreen");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogscreen" "\"");
+    UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
     // split output into lines
     std::stringstream        ss(output);
@@ -364,7 +365,7 @@ TEST(UKLOGGER, LogToScreen) {
 // Execution of the code is performed in external executables. Output is checked here
 // Test logging to file
 TEST(UKLOGGER, LogToFile) {
-    std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogfile");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogfile" "\"");
     UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
     // split output into lines
@@ -465,7 +466,7 @@ TEST(UKLOGGER, LogToFile) {
 // Execution of the code is performed in external executables. Output is checked here
 // Test logging to file, fail to open the file
 TEST(UKLOGGER, LogToFileFailOpen) {
-    std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogfilefailopen");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogfilefailopen" "\"");
     UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
     // split output into lines
@@ -519,7 +520,7 @@ TEST(UKLOGGER, LogToFileCannotDelete) {
     UKLOG_INFO("LogToFileCannotDelete", "Permissions of Lock file folder after changes");
     logPermissons(std::filesystem::status(LOG_FOLDER).permissions());
 
-    std::string output = exec(PROJECT_BIN_DIR "/test/testukcpplogfilecannotdelete");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogfilecannotdelete" "\"");
     UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
     // split output into lines
