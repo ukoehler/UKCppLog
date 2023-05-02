@@ -13,6 +13,7 @@ env:
 jobs:
   build:
     strategy:
+      fail-fast: false
       matrix:
         os: [macos-latest, windows-latest, ubuntu-latest]
     # The CMake configure and build commands are platform agnostic and should work equally well on Windows or Mac.

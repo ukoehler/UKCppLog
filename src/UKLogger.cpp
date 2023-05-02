@@ -30,6 +30,11 @@
 #include <sstream>
 #include <thread>
 
+// Since __PRETTY_FUNCTION__ is not official C++
+// Provide a macro for VisualStudio. GCC nd Clang should be fine
+#if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
 namespace uk::log {
 UKLogger::UKLogger() : mInitialBuffer(""), mFileStream() {
     log("INFO", "Startup", static_cast<const char*>(__PRETTY_FUNCTION__),
