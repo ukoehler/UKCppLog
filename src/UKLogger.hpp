@@ -127,6 +127,12 @@ UKLogger& logger();
 
 }  // namespace uk::log
 
+// Since __PRETTY_FUNCTION__ is not official C++
+// Provide a macro for VisualStudio. GCC nd Clang should be fine
+#if !defined(__PRETTY_FUNCTION__) && !defined(__GNUC__)
+#define __PRETTY_FUNCTION__ __FUNCSIG__
+#endif
+
 // future version of clang-tidy might not require the static_cast<const char*>(__PRETTY_FUNCTION__)
 // macros are no bueno, but __PRETTY_FUNCTION__ requires them here
 /**
