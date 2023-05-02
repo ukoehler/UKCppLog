@@ -33,12 +33,12 @@ namespace uk::log {
 /**
  * @brief Basic C++ logger class.
  * This class allows for easy logging from C++ (via macros).
- * Logging is available beforee entering
+ * Logging is available before entering
  * the main() function into a std::string buffer and can be send to a
  * log file or will be dumped after process execution to the commandline.
  *
  * When using a QObject by mEngine.rootContext()->setContextProperty("ukLogger", &uk::log::logger());
- * the singleton mechanism stopps working and an additional instance is
+ * the singleton mechanism stops working and an additional instance is
  * created. Move all Signal/Slot mechanisms used in connection with QML
  * to UKLoggerObject.
  *
@@ -63,16 +63,16 @@ class UKLogger {
      * This member is thread save.
      *
      * @param [in] severity A string denoting the severity of the entry,
-     * eg "INFO" or "ERROR"
+     * eg "INFO" or "ERROR".
      * @param [in] kind A string denoting the kind of the entry, normally
-     * the class name
+     * the class name.
      * @param [in] func The name of the function the entry is is logged
-     * in
-     * @param [in] message The logging message
+     * in.
+     * @param [in] message The logging message.
      * @param [in] line The line in the source code this entry is logged
-     * from
-     * @pre None
-     * @post Log line added
+     * from.
+     * @pre None.
+     * @post Log line added.
      */
     void log(const std::string& severity, const std::string& kind, const std::string& func, const std::string& message,
              int line = 0);
@@ -80,12 +80,21 @@ class UKLogger {
     /**
      * @brief Set name of the logfile.
      * If the logfile does exist, it will be deleted first. Should that
-     * fail, the application will fail immdiately.
-     * @param [in] name Name of the logfile
-     * @pre None
-     * @post All subsequential logging is added to file
+     * fail, the application will fail immediately.
+     * @param [in] name Name of the logfile.
+     * @pre None.
+     * @post All subsequential logging is added to file.
      */
     void setLogfileName(const std::string& name);
+
+    /**
+     * @brief Get the version of the library.
+     * 
+     * @return std::string: The version of the library.
+     * @pre None.
+     * @post Log line added.
+    */
+    static std::string getVersion();
 
     // No copy
     UKLogger(const UKLogger& other) = delete;

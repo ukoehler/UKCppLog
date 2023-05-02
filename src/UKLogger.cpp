@@ -31,7 +31,7 @@
 #include <thread>
 
 namespace uk::log {
-UKLogger::UKLogger() : mInitialBuffer(""), mFileStream(nullptr) {
+UKLogger::UKLogger() : mInitialBuffer(""), mFileStream() {
     log("INFO", "Startup", static_cast<const char*>(__PRETTY_FUNCTION__),
         std::string("Create logger Version ") + VERSION_STRING, __LINE__);
 }
@@ -150,6 +150,8 @@ void UKLogger::setLogfileName(const std::string& name) {
     mFileOpen = true;
     mFileStream << mInitialBuffer;
 }
+
+std::string UKLogger::getVersion() { return VERSION_STRING; }
 
 void UKLogger::moveToTerminal() {
     if (!mFileOpen) {

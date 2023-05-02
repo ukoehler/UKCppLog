@@ -2,7 +2,7 @@ cmake_minimum_required (VERSION 3.10)
 
 # Set the project name
 project(UKCppLog
-        VERSION 0.5 DESCRIPTION "A simple C++ logging library"
+        VERSION 0.6 DESCRIPTION "A simple C++ logging library"
         LANGUAGES CXX)
 
 set(AUTHOR "Uwe Köhler")

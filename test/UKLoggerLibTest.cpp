@@ -18,6 +18,7 @@
 #include <filesystem>
 #include <fstream>
 #include <map>
+#include <array>
 #include <regex>
 #include <sstream>
 #include <thread>
