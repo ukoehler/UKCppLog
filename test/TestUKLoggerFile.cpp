@@ -32,7 +32,7 @@
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
  public:
-    const int testFunction(__attribute__((unused)) int argument) const {
+    const int testFunction([[maybe_unused]] int argument) const {
         UKLOG_ENTER("test class")
         return 42;
     }

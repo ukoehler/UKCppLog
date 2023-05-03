@@ -37,13 +37,13 @@ class Test1 {
 namespace abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz::abcdefghijklmnopqrstuvwxyz {
 class Test2 {
  public:
-    explicit Test2(__attribute__((unused)) int argument) {
+    explicit Test2([[maybe_unused]] int argument) {
         UKLOG_INFO("Test2", "Constructor");
     }
     virtual ~Test2() {
         UKLOG_INFO("Test2", "Destructor");
     }
-    virtual inline void Log2(__attribute__((unused)) int argument) const noexcept{
+    virtual inline void Log2([[maybe_unused]] int argument) const noexcept{
         UKLOG_INFO("Test2", "Log2");
     }
 };
@@ -52,7 +52,7 @@ class Test2 {
 // Just get some interesting __PRETTY_FUNCTION__ output
 class TestClass {
  public:
-    int testFunction(__attribute__((unused)) int argument) const {
+    int testFunction([[maybe_unused]] int argument) const {
         UKLOG_ENTER("test class")
         return 42;
     }

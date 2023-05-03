@@ -50,7 +50,7 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     // convert to std::time_t in order to convert to std::tm (broken time)
     auto timer = std::chrono::system_clock::to_time_t(now);
 
-    std::tm            tm = *std::localtime(&timer);
+    std::tm tm = *std::localtime(&timer);
     std::ostringstream s;
     s << std::put_time(&tm, "%Y.%m.%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << ms.count();
     std::string timeStr  = s.str();
