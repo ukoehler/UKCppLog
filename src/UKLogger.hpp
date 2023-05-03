@@ -26,6 +26,7 @@
 #include <memory>
 #include <mutex>
 #include <sstream>
+#include <filesystem>
 #include <string>
 
 namespace uk::log {
@@ -86,6 +87,16 @@ class UKLogger {
      * @post All subsequential logging is added to file.
      */
     void setLogfileName(const std::string& name);
+
+    /**
+     * @brief Set name of the logfile.
+     * If the logfile does exist, it will be deleted first. Should that
+     * fail, the application will fail immediately.
+     * @param [in] name Name of the logfile.
+     * @pre None.
+     * @post All subsequential logging is added to file.
+     */
+    void setLogfileName(const std::filesystem::path& name);
 
     /**
      * @brief Get the version of the library.

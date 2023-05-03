@@ -151,6 +151,10 @@ void UKLogger::setLogfileName(const std::string& name) {
     mFileStream << mInitialBuffer;
 }
 
+void setLogfileName(const std::filesystem::path& name) {
+    setLogfileName(name.string());
+}
+
 std::string UKLogger::getVersion() { return VERSION_STRING; }
 
 void UKLogger::moveToTerminal() {
