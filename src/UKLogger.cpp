@@ -151,7 +151,7 @@ void UKLogger::setLogfileName(const std::string& name) {
     mFileStream << mInitialBuffer;
 }
 
-void setLogfileName(const std::filesystem::path& name) {
+void UKLogger::setLogfileName(const std::filesystem::path& name) {
     setLogfileName(name.string());
 }
 
