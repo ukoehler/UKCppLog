@@ -24,6 +24,11 @@
 #include <thread>
 #include "../src/UKLogger.hpp"
 
+#ifdef _WIN32
+#define popen _popen
+#define pclose _pclose
+#define WEXITSTATUS
+#endif
 namespace {
 // See PrettyUnitTestResultPrinter in gtest.cc and EmptyTestEventListener in gtest.h
 // Add gtest output to logfile
