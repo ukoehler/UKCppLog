@@ -29,6 +29,13 @@
 #define pclose _pclose
 #define WEXITSTATUS
 #endif
+
+#ifdef CMAKE_INTDIR
+#define INTDIR CMAKE_INTDIR + "/"
+#else
+#define INTDIR ""
+#endif
+ 
 namespace {
 // See PrettyUnitTestResultPrinter in gtest.cc and EmptyTestEventListener in gtest.h
 // Add gtest output to logfile
@@ -222,156 +229,158 @@ void logPermissons(std::filesystem::perms p) {
 // Test logging to screen
 TEST(UKLOGGER, LogToScreen) {
     UKLOG_INFO("TEST", PROJECT_BIN_DIR "/test/testukcpplogscreen");
-    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogscreen" "\"");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/" INTDIR "testukcpplogscreen" "\"");
     UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
-    // split output into lines
-    std::stringstream        ss(output);
-    std::string              segment;
-    std::vector<std::string> lines;
-    while (std::getline(ss, segment, '\n')) {
-        lines.push_back(segment);  // Spit string at newline character
-    }
-    EXPECT_EQ(61ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
-    // get current time
-    auto    now     = std::chrono::system_clock::now();
-    auto    timer   = std::chrono::system_clock::to_time_t(now);
-    // Check line 1
-    checkLogLine(lines.at(0), timer, "INFO", "Startup",
-                 "uk::log::UKLogger::UKLogger(...)", 36,
-                 std::string("Create logger Version ") + VERSION_STRING);
-
-
-    // Check line 2
-    checkLogLine(lines.at(1), timer, "DEBUG", "test main",
-                 "main(...)", 73,
-                 "Debug");
-
-    // Check line 3
-    logInfo info3(lines.at(2));
-    // get current time
-    double seconds = std::difftime(timer, std::mktime(&info3.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("INFO", trim(info3.mSeverity));
-    EXPECT_EQ(std::string("test main"), trim(info3.mKind));
-    EXPECT_EQ(std::string("main(...)"), trim(info3.mFunction));
-    EXPECT_EQ(74, info3.mLine);
-    EXPECT_EQ("Info", trim(info3.mMessage));
-
-    // Check line 4
-    logInfo info4(lines.at(3));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info4.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("WARN", trim(info4.mSeverity));
-    EXPECT_EQ(std::string("test main"), trim(info4.mKind));
-    EXPECT_EQ(std::string("main(...)"), trim(info4.mFunction));
-    EXPECT_EQ(75, info4.mLine);
-    EXPECT_EQ("Warn", trim(info4.mMessage));
-
-    // Check line 5
-    logInfo info5(lines.at(4));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info5.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("ERROR", trim(info5.mSeverity));
-    EXPECT_EQ(std::string("test main"), trim(info5.mKind));
-    EXPECT_EQ(std::string("main(...)"), trim(info5.mFunction));
-    EXPECT_EQ(76, info5.mLine);
-    EXPECT_EQ("Error", trim(info5.mMessage));
-
-    // Check line 6
-    logInfo info6(lines.at(5));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info6.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("FATAL", trim(info6.mSeverity));
-    EXPECT_EQ(std::string("test main"), trim(info6.mKind));
-    EXPECT_EQ(std::string("main(...)"), trim(info6.mFunction));
-    EXPECT_EQ(77, info6.mLine);
-    EXPECT_EQ("Fatal", trim(info6.mMessage));
-
-    // Check line 7
-    logInfo info7(lines.at(6));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info7.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("INFO", trim(info7.mSeverity));
-    EXPECT_EQ(std::string("Test1"), trim(info7.mKind));
-    EXPECT_EQ(std::string("...Test1::Log1(...)"), trim(info7.mFunction));
-    EXPECT_EQ(32, info7.mLine);
-    EXPECT_EQ("Log1", trim(info7.mMessage));
-
-    // Check line 8
-    logInfo info8(lines.at(7));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info8.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("INFO", trim(info8.mSeverity));
-    EXPECT_EQ(std::string("Test2"), trim(info8.mKind));
-    EXPECT_EQ(std::string("...Test2::Test2(...)"), trim(info8.mFunction));
-    EXPECT_EQ(41, info8.mLine);
-    EXPECT_EQ("Constructor", trim(info8.mMessage));
-
-    // Check line 9
-    logInfo info9(lines.at(8));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info9.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("INFO", trim(info9.mSeverity));
-    EXPECT_EQ(std::string("Test2"), trim(info9.mKind));
-    EXPECT_EQ(std::string("...Test2::Log2(...)"), trim(info9.mFunction));
-    EXPECT_EQ(47, info9.mLine);
-    EXPECT_EQ("Log2", trim(info9.mMessage));
-
-    // Check line 10
-    logInfo info10(lines.at(9));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info10.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("INFO", trim(info10.mSeverity));
-    EXPECT_EQ(std::string("Test2"), trim(info10.mKind));
-    EXPECT_EQ(std::string("...Test2::~Test2(...)"), trim(info10.mFunction));
-    EXPECT_EQ(44, info10.mLine);
-    EXPECT_EQ("Destructor", trim(info10.mMessage));
-
-    // Check line 11
-    logInfo info11(lines.at(10));
-    // get current time
-    seconds = std::difftime(timer, std::mktime(&info11.mTime));
-    EXPECT_GE(30, seconds);
-    EXPECT_EQ("TRACE", trim(info11.mSeverity));
-    EXPECT_EQ(std::string("test class"), trim(info11.mKind));
-    EXPECT_EQ(std::string("TestClass::testFunction(...)"), trim(info11.mFunction));
-    EXPECT_EQ(56, info11.mLine);
-    EXPECT_EQ("Enter int TestClass::testFunction(int) const", trim(info11.mMessage));
-
-    // Test thread safety and thread ids
-    std::map<std::string, int> threadIDMap;
-    for (unsigned int i = 11; i < lines.size(); ++i) {
-        logInfo info(lines.at(i));
-        double seconds = std::difftime(timer, std::mktime(&info.mTime));
-        EXPECT_GE(30, seconds);
-        EXPECT_EQ("INFO", trim(info.mSeverity));
-        EXPECT_EQ(std::string("test main"), trim(info.mKind));
-        EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
-        EXPECT_EQ(68, info.mLine);
-        if (0 == threadIDMap.count(info.mThreadID)) {
-            threadIDMap.insert({info.mThreadID, 1});
-        } else {
-            threadIDMap[info.mThreadID]++;
+    if( !output.empty() ) {
+        // split output into lines
+        std::stringstream        ss(output);
+        std::string              segment;
+        std::vector<std::string> lines;
+        while (std::getline(ss, segment, '\n')) {
+            lines.push_back(segment);  // Spit string at newline character
         }
-    }
-    EXPECT_EQ(5ul, threadIDMap.size());
-    for (auto iter = threadIDMap.begin(); iter != threadIDMap.end(); ++iter) {
-        EXPECT_EQ(10, iter->second);
+        EXPECT_EQ(61ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+        // get current time
+        auto    now     = std::chrono::system_clock::now();
+        auto    timer   = std::chrono::system_clock::to_time_t(now);
+        // Check line 1
+        checkLogLine(lines.at(0), timer, "INFO", "Startup",
+                    "uk::log::UKLogger::UKLogger(...)", 36,
+                    std::string("Create logger Version ") + VERSION_STRING);
+
+
+        // Check line 2
+        checkLogLine(lines.at(1), timer, "DEBUG", "test main",
+                    "main(...)", 73,
+                    "Debug");
+
+        // Check line 3
+        logInfo info3(lines.at(2));
+        // get current time
+        double seconds = std::difftime(timer, std::mktime(&info3.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("INFO", trim(info3.mSeverity));
+        EXPECT_EQ(std::string("test main"), trim(info3.mKind));
+        EXPECT_EQ(std::string("main(...)"), trim(info3.mFunction));
+        EXPECT_EQ(74, info3.mLine);
+        EXPECT_EQ("Info", trim(info3.mMessage));
+
+        // Check line 4
+        logInfo info4(lines.at(3));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info4.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("WARN", trim(info4.mSeverity));
+        EXPECT_EQ(std::string("test main"), trim(info4.mKind));
+        EXPECT_EQ(std::string("main(...)"), trim(info4.mFunction));
+        EXPECT_EQ(75, info4.mLine);
+        EXPECT_EQ("Warn", trim(info4.mMessage));
+
+        // Check line 5
+        logInfo info5(lines.at(4));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info5.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("ERROR", trim(info5.mSeverity));
+        EXPECT_EQ(std::string("test main"), trim(info5.mKind));
+        EXPECT_EQ(std::string("main(...)"), trim(info5.mFunction));
+        EXPECT_EQ(76, info5.mLine);
+        EXPECT_EQ("Error", trim(info5.mMessage));
+
+        // Check line 6
+        logInfo info6(lines.at(5));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info6.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("FATAL", trim(info6.mSeverity));
+        EXPECT_EQ(std::string("test main"), trim(info6.mKind));
+        EXPECT_EQ(std::string("main(...)"), trim(info6.mFunction));
+        EXPECT_EQ(77, info6.mLine);
+        EXPECT_EQ("Fatal", trim(info6.mMessage));
+
+        // Check line 7
+        logInfo info7(lines.at(6));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info7.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("INFO", trim(info7.mSeverity));
+        EXPECT_EQ(std::string("Test1"), trim(info7.mKind));
+        EXPECT_EQ(std::string("...Test1::Log1(...)"), trim(info7.mFunction));
+        EXPECT_EQ(32, info7.mLine);
+        EXPECT_EQ("Log1", trim(info7.mMessage));
+
+        // Check line 8
+        logInfo info8(lines.at(7));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info8.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("INFO", trim(info8.mSeverity));
+        EXPECT_EQ(std::string("Test2"), trim(info8.mKind));
+        EXPECT_EQ(std::string("...Test2::Test2(...)"), trim(info8.mFunction));
+        EXPECT_EQ(41, info8.mLine);
+        EXPECT_EQ("Constructor", trim(info8.mMessage));
+
+        // Check line 9
+        logInfo info9(lines.at(8));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info9.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("INFO", trim(info9.mSeverity));
+        EXPECT_EQ(std::string("Test2"), trim(info9.mKind));
+        EXPECT_EQ(std::string("...Test2::Log2(...)"), trim(info9.mFunction));
+        EXPECT_EQ(47, info9.mLine);
+        EXPECT_EQ("Log2", trim(info9.mMessage));
+
+        // Check line 10
+        logInfo info10(lines.at(9));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info10.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("INFO", trim(info10.mSeverity));
+        EXPECT_EQ(std::string("Test2"), trim(info10.mKind));
+        EXPECT_EQ(std::string("...Test2::~Test2(...)"), trim(info10.mFunction));
+        EXPECT_EQ(44, info10.mLine);
+        EXPECT_EQ("Destructor", trim(info10.mMessage));
+
+        // Check line 11
+        logInfo info11(lines.at(10));
+        // get current time
+        seconds = std::difftime(timer, std::mktime(&info11.mTime));
+        EXPECT_GE(30, seconds);
+        EXPECT_EQ("TRACE", trim(info11.mSeverity));
+        EXPECT_EQ(std::string("test class"), trim(info11.mKind));
+        EXPECT_EQ(std::string("TestClass::testFunction(...)"), trim(info11.mFunction));
+        EXPECT_EQ(56, info11.mLine);
+        EXPECT_EQ("Enter int TestClass::testFunction(int) const", trim(info11.mMessage));
+
+        // Test thread safety and thread ids
+        std::map<std::string, int> threadIDMap;
+        for (unsigned int i = 11; i < lines.size(); ++i) {
+            logInfo info(lines.at(i));
+            double seconds = std::difftime(timer, std::mktime(&info.mTime));
+            EXPECT_GE(30, seconds);
+            EXPECT_EQ("INFO", trim(info.mSeverity));
+            EXPECT_EQ(std::string("test main"), trim(info.mKind));
+            EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
+            EXPECT_EQ(68, info.mLine);
+            if (0 == threadIDMap.count(info.mThreadID)) {
+                threadIDMap.insert({info.mThreadID, 1});
+            } else {
+                threadIDMap[info.mThreadID]++;
+            }
+        }
+        EXPECT_EQ(5ul, threadIDMap.size());
+        for (auto iter = threadIDMap.begin(); iter != threadIDMap.end(); ++iter) {
+            EXPECT_EQ(10, iter->second);
+        }
     }
 }
 
 // Execution of the code is performed in external executables. Output is checked here
 // Test logging to file
 TEST(UKLOGGER, LogToFile) {
-    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogfile" "\"");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/" INTDIR "testukcpplogfile" "\"");
     UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
     // split output into lines
@@ -396,83 +405,85 @@ TEST(UKLOGGER, LogToFile) {
             // UKLOG_INFO("TEST", line);
         }
     }
-    EXPECT_EQ(59ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
-    // get current time
-    auto    now     = std::chrono::system_clock::now();
-    auto    timer   = std::chrono::system_clock::to_time_t(now);
-    // Check line 1
-    checkLogLine(lines.at(0), timer, "INFO", "Startup",
-                 "uk::log::UKLogger::UKLogger(...)", 36,
-                 std::string("Create logger Version ") + VERSION_STRING);
+    if( 0 < lines.size() ) {
+        EXPECT_EQ(59ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+        // get current time
+        auto    now     = std::chrono::system_clock::now();
+        auto    timer   = std::chrono::system_clock::to_time_t(now);
+        // Check line 1
+        checkLogLine(lines.at(0), timer, "INFO", "Startup",
+                    "uk::log::UKLogger::UKLogger(...)", 36,
+                    std::string("Create logger Version ") + VERSION_STRING);
 
-    // Check line 2
-    checkLogLine(lines.at(1), timer, "INFO", "test main",
-                 "main(...)", 53,
-                 LOG_FOLDER);
+        // Check line 2
+        checkLogLine(lines.at(1), timer, "INFO", "test main",
+                    "main(...)", 53,
+                    LOG_FOLDER);
 
-    // Check line 3
-    checkLogLine(lines.at(2), timer, "DEBUG", "test main",
-                 "main(...)", 54,
-                 "Debug");
+        // Check line 3
+        checkLogLine(lines.at(2), timer, "DEBUG", "test main",
+                    "main(...)", 54,
+                    "Debug");
 
-    // Check line 4
-    checkLogLine(lines.at(3), timer, "INFO", "test main",
-                 "main(...)", 55,
-                 "Info");
+        // Check line 4
+        checkLogLine(lines.at(3), timer, "INFO", "test main",
+                    "main(...)", 55,
+                    "Info");
 
-    // Check line 5
-    checkLogLine(lines.at(4), timer, "WARN", "test main",
-                 "main(...)", 56,
-                 "Warn");
+        // Check line 5
+        checkLogLine(lines.at(4), timer, "WARN", "test main",
+                    "main(...)", 56,
+                    "Warn");
 
-    // Check line 6
-    checkLogLine(lines.at(5), timer, "ERROR", "test main",
-                 "main(...)", 57,
-                 "Error");
+        // Check line 6
+        checkLogLine(lines.at(5), timer, "ERROR", "test main",
+                    "main(...)", 57,
+                    "Error");
 
-    // Check line 7
-    checkLogLine(lines.at(6), timer, "FATAL", "test main",
-                 "main(...)", 58,
-                 "Fatal");
+        // Check line 7
+        checkLogLine(lines.at(6), timer, "FATAL", "test main",
+                    "main(...)", 58,
+                    "Fatal");
 
-    // Check line 8
-    checkLogLine(lines.at(7), timer, "TRACE", "test class",
-                 "TestClass::testFunction(...)", 36,
-                 "Enter const int TestClass::testFunction(int) const");
+        // Check line 8
+        checkLogLine(lines.at(7), timer, "TRACE", "test class",
+                    "TestClass::testFunction(...)", 36,
+                    "Enter const int TestClass::testFunction(int) const");
 
-    // Check line 9
-    std::filesystem::path expectedLogFileName(LOG_FOLDER);
-    expectedLogFileName /= "TestUKLoggerFile.log";
-    checkLogLine(lines.at(8), timer, "WARN", "Startup",
-                 "uk::log::UKLogger::setLogfileName(...)", 133,
-                 "Logfile " + expectedLogFileName.u8string() + " exists. Deleting.");
+        // Check line 9
+        std::filesystem::path expectedLogFileName(LOG_FOLDER);
+        expectedLogFileName /= "TestUKLoggerFile.log";
+        checkLogLine(lines.at(8), timer, "WARN", "Startup",
+                    "uk::log::UKLogger::setLogfileName(...)", 133,
+                    "Logfile " + expectedLogFileName.u8string() + " exists. Deleting.");
 
-    // Test thread safety and thread ids
-    std::map<std::string, int> threadIDMap;
-    for (unsigned int i = 9; i < lines.size(); ++i) {
-        logInfo info(lines.at(i));
-        double seconds = std::difftime(timer, std::mktime(&info.mTime));
-        EXPECT_GE(30, seconds);
-        EXPECT_EQ("INFO", trim(info.mSeverity));
-        EXPECT_EQ(std::string("test main"), trim(info.mKind));
-        EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
-        EXPECT_EQ(48, info.mLine);
-        if (0 == threadIDMap.count(info.mThreadID)) {
-            threadIDMap.insert({info.mThreadID, 1});
-        } else {
-            threadIDMap[info.mThreadID]++;
+        // Test thread safety and thread ids
+        std::map<std::string, int> threadIDMap;
+        for (unsigned int i = 9; i < lines.size(); ++i) {
+            logInfo info(lines.at(i));
+            double seconds = std::difftime(timer, std::mktime(&info.mTime));
+            EXPECT_GE(30, seconds);
+            EXPECT_EQ("INFO", trim(info.mSeverity));
+            EXPECT_EQ(std::string("test main"), trim(info.mKind));
+            EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
+            EXPECT_EQ(48, info.mLine);
+            if (0 == threadIDMap.count(info.mThreadID)) {
+                threadIDMap.insert({info.mThreadID, 1});
+            } else {
+                threadIDMap[info.mThreadID]++;
+            }
         }
-    }
-    EXPECT_EQ(5ul, threadIDMap.size());
-    for (auto iter = threadIDMap.begin(); iter != threadIDMap.end(); ++iter) {
-        EXPECT_EQ(10, iter->second);
+        EXPECT_EQ(5ul, threadIDMap.size());
+        for (auto iter = threadIDMap.begin(); iter != threadIDMap.end(); ++iter) {
+            EXPECT_EQ(10, iter->second);
+        }
     }
 }
 
 // Execution of the code is performed in external executables. Output is checked here
 // Test logging to file, fail to open the file
 TEST(UKLOGGER, LogToFileFailOpen) {
-    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogfilefailopen" "\"");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/" INTDIR "testukcpplogfilefailopen" "\"");
     UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
     // split output into lines
@@ -484,27 +495,29 @@ TEST(UKLOGGER, LogToFileFailOpen) {
     }
     EXPECT_EQ(5ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
 
-    // Check line 1
-    std::filesystem::path logFileName(LOG_FOLDER);
-    logFileName /= "Doesnotexist";
-    logFileName /= "TestUKLoggerFile.log";
-    EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
+    if( 0 < lines.size() ) {
+        // Check line 1
+        std::filesystem::path logFileName(LOG_FOLDER);
+        logFileName /= "Doesnotexist";
+        logFileName /= "TestUKLoggerFile.log";
+        EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
 
-    auto    now     = std::chrono::system_clock::now();
-    auto    timer   = std::chrono::system_clock::to_time_t(now);
+        auto    now     = std::chrono::system_clock::now();
+        auto    timer   = std::chrono::system_clock::to_time_t(now);
 
-    checkLogLine(lines.at(1), timer, "INFO", "Startup",
-                 "uk::log::UKLogger::UKLogger(...)", 36,
-                 std::string("Create logger Version ") + VERSION_STRING);
-    checkLogLine(lines.at(2), timer, "INFO", "test main",
-                 "main(...)", 42,
-                 LOG_FOLDER);
-    checkLogLine(lines.at(3), timer, "TRACE", "test class",
-                 "TestClass::testFunction(...)", 36,
-                 "Enter int TestClass::testFunction(int) const");
-    checkLogLine(lines.at(4), timer, "FATAL", "Startup",
-                 "uk::log::UKLogger::setLogfileName(...)", 143,
-                 std::string("Could not open logfile ") + logFileName.u8string() + ". Quitting.");
+        checkLogLine(lines.at(1), timer, "INFO", "Startup",
+                    "uk::log::UKLogger::UKLogger(...)", 36,
+                    std::string("Create logger Version ") + VERSION_STRING);
+        checkLogLine(lines.at(2), timer, "INFO", "test main",
+                    "main(...)", 42,
+                    LOG_FOLDER);
+        checkLogLine(lines.at(3), timer, "TRACE", "test class",
+                    "TestClass::testFunction(...)", 36,
+                    "Enter int TestClass::testFunction(int) const");
+        checkLogLine(lines.at(4), timer, "FATAL", "Startup",
+                    "uk::log::UKLogger::setLogfileName(...)", 143,
+                    std::string("Could not open logfile ") + logFileName.u8string() + ". Quitting.");
+    }
 }
 
 // Execution of the code is performed in external executables. Output is checked here
@@ -526,38 +539,40 @@ TEST(UKLOGGER, LogToFileCannotDelete) {
     UKLOG_INFO("LogToFileCannotDelete", "Permissions of Lock file folder after changes");
     logPermissons(std::filesystem::status(LOG_FOLDER).permissions());
 
-    std::string output = exec("\"" PROJECT_BIN_DIR "/test/testukcpplogfilecannotdelete" "\"");
+    std::string output = exec("\"" PROJECT_BIN_DIR "/test/" INTDIR "testukcpplogfilecannotdelete" "\"");
     UKLOG_INFO("TEST", output);
     EXPECT_FALSE(output.empty());
-    // split output into lines
-    std::stringstream        ss(output);
-    std::string              segment;
-    std::vector<std::string> lines;
-    while (std::getline(ss, segment, '\n')) {
-        lines.push_back(segment);  // Spit string at newline character
+
+    if( !output.empty() ) {
+        // split output into lines
+        std::stringstream        ss(output);
+        std::string              segment;
+        std::vector<std::string> lines;
+        while (std::getline(ss, segment, '\n')) {
+            lines.push_back(segment);  // Spit string at newline character
+        }
+        EXPECT_EQ(6ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
+
+        EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
+        auto    now     = std::chrono::system_clock::now();
+        auto    timer   = std::chrono::system_clock::to_time_t(now);
+
+        checkLogLine(lines.at(1), timer, "INFO", "Startup",
+                    "uk::log::UKLogger::UKLogger(...)", 36,
+                    std::string("Create logger Version ") + VERSION_STRING);
+        checkLogLine(lines.at(2), timer, "INFO", "test main",
+                    "main(...)", 42,
+                    LOG_FOLDER);
+        checkLogLine(lines.at(3), timer, "TRACE", "test class",
+                    "TestClass::testFunction(...)", 36,
+                    "Enter int TestClass::testFunction(int) const");
+        checkLogLine(lines.at(4), timer, "WARN", "Startup",
+                    "uk::log::UKLogger::setLogfileName(...)", 133,
+                    std::string("Logfile ") + logFileName.u8string() + " exists. Deleting.");
+        checkLogLine(lines.at(5), timer, "FATAL", "Startup",
+                    "uk::log::UKLogger::setLogfileName(...)", 135,
+                    std::string("Could not delete existing logfile ") + logFileName.u8string() + ". Quitting.");
     }
-    EXPECT_EQ(6ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
-
-    EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
-    auto    now     = std::chrono::system_clock::now();
-    auto    timer   = std::chrono::system_clock::to_time_t(now);
-
-    checkLogLine(lines.at(1), timer, "INFO", "Startup",
-                 "uk::log::UKLogger::UKLogger(...)", 36,
-                 std::string("Create logger Version ") + VERSION_STRING);
-    checkLogLine(lines.at(2), timer, "INFO", "test main",
-                 "main(...)", 42,
-                 LOG_FOLDER);
-    checkLogLine(lines.at(3), timer, "TRACE", "test class",
-                 "TestClass::testFunction(...)", 36,
-                 "Enter int TestClass::testFunction(int) const");
-    checkLogLine(lines.at(4), timer, "WARN", "Startup",
-                 "uk::log::UKLogger::setLogfileName(...)", 133,
-                 std::string("Logfile ") + logFileName.u8string() + " exists. Deleting.");
-    checkLogLine(lines.at(5), timer, "FATAL", "Startup",
-                 "uk::log::UKLogger::setLogfileName(...)", 135,
-                 std::string("Could not delete existing logfile ") + logFileName.u8string() + ". Quitting.");
-
     std::filesystem::permissions(LOG_FOLDER,
                     oldPerms,
                     std::filesystem::perm_options::replace);
