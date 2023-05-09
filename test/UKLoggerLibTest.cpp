@@ -31,7 +31,7 @@
 #endif
 
 #ifdef CMAKE_INTDIR
-#define INTDIR CMAKE_INTDIR + "/"
+#define INTDIR CMAKE_INTDIR "/"
 #else
 #define INTDIR ""
 #endif
