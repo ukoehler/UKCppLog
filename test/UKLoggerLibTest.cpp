@@ -194,6 +194,17 @@ std::string exec(const char* cmd) {
     return result;
 }
 
+std::string fixCdecl(const std::string &in) {
+#if defined (_MSC_VER)
+    std::string str = in;
+    str = std::regex_replace(str, std::regex("__cdecl "), "");
+    str = std::regex_replace(str, std::regex(" noexcept"), "");
+    return str;
+#else
+    return in;
+#endif
+}
+
 void checkLogLine(const std::string &lineStr, const time_t &timer,
                   const std::string &severity, const std::string &kind,
                   const std::string &function,
@@ -203,9 +214,9 @@ void checkLogLine(const std::string &lineStr, const time_t &timer,
     EXPECT_GE(30, seconds);
     EXPECT_EQ(severity, trim(info.mSeverity));
     EXPECT_EQ(kind, trim(info.mKind));
-    EXPECT_EQ(function, trim(info.mFunction));
+    EXPECT_EQ(function, fixCdecl(trim(info.mFunction)));
     EXPECT_EQ(line, info.mLine);
-    EXPECT_EQ(message, trim(info.mMessage));
+    EXPECT_EQ(message, fixCdecl(trim(info.mMessage)));
 }
 
 void logPermissons(std::filesystem::perms p) {
@@ -262,7 +273,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("INFO", trim(info3.mSeverity));
         EXPECT_EQ(std::string("test main"), trim(info3.mKind));
-        EXPECT_EQ(std::string("main(...)"), trim(info3.mFunction));
+        EXPECT_EQ(std::string("main(...)"), fixCdecl(trim(info3.mFunction)));
         EXPECT_EQ(74, info3.mLine);
         EXPECT_EQ("Info", trim(info3.mMessage));
 
@@ -273,7 +284,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("WARN", trim(info4.mSeverity));
         EXPECT_EQ(std::string("test main"), trim(info4.mKind));
-        EXPECT_EQ(std::string("main(...)"), trim(info4.mFunction));
+        EXPECT_EQ(std::string("main(...)"), fixCdecl(trim(info4.mFunction)));
         EXPECT_EQ(75, info4.mLine);
         EXPECT_EQ("Warn", trim(info4.mMessage));
 
@@ -284,7 +295,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("ERROR", trim(info5.mSeverity));
         EXPECT_EQ(std::string("test main"), trim(info5.mKind));
-        EXPECT_EQ(std::string("main(...)"), trim(info5.mFunction));
+        EXPECT_EQ(std::string("main(...)"), fixCdecl(trim(info5.mFunction)));
         EXPECT_EQ(76, info5.mLine);
         EXPECT_EQ("Error", trim(info5.mMessage));
 
@@ -295,7 +306,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("FATAL", trim(info6.mSeverity));
         EXPECT_EQ(std::string("test main"), trim(info6.mKind));
-        EXPECT_EQ(std::string("main(...)"), trim(info6.mFunction));
+        EXPECT_EQ(std::string("main(...)"), fixCdecl(trim(info6.mFunction)));
         EXPECT_EQ(77, info6.mLine);
         EXPECT_EQ("Fatal", trim(info6.mMessage));
 
@@ -306,7 +317,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("INFO", trim(info7.mSeverity));
         EXPECT_EQ(std::string("Test1"), trim(info7.mKind));
-        EXPECT_EQ(std::string("...Test1::Log1(...)"), trim(info7.mFunction));
+        EXPECT_EQ(std::string("...Test1::Log1(...)"), fixCdecl(trim(info7.mFunction)));
         EXPECT_EQ(32, info7.mLine);
         EXPECT_EQ("Log1", trim(info7.mMessage));
 
@@ -317,7 +328,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("INFO", trim(info8.mSeverity));
         EXPECT_EQ(std::string("Test2"), trim(info8.mKind));
-        EXPECT_EQ(std::string("...Test2::Test2(...)"), trim(info8.mFunction));
+        EXPECT_EQ(std::string("...Test2::Test2(...)"), fixCdecl(trim(info8.mFunction)));
         EXPECT_EQ(41, info8.mLine);
         EXPECT_EQ("Constructor", trim(info8.mMessage));
 
@@ -328,7 +339,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("INFO", trim(info9.mSeverity));
         EXPECT_EQ(std::string("Test2"), trim(info9.mKind));
-        EXPECT_EQ(std::string("...Test2::Log2(...)"), trim(info9.mFunction));
+        EXPECT_EQ(std::string("...Test2::Log2(...)"), fixCdecl(trim(info9.mFunction)));
         EXPECT_EQ(47, info9.mLine);
         EXPECT_EQ("Log2", trim(info9.mMessage));
 
@@ -339,7 +350,7 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("INFO", trim(info10.mSeverity));
         EXPECT_EQ(std::string("Test2"), trim(info10.mKind));
-        EXPECT_EQ(std::string("...Test2::~Test2(...)"), trim(info10.mFunction));
+        EXPECT_EQ(std::string("...Test2::~Test2(...)"), fixCdecl(trim(info10.mFunction)));
         EXPECT_EQ(44, info10.mLine);
         EXPECT_EQ("Destructor", trim(info10.mMessage));
 
@@ -350,9 +361,9 @@ TEST(UKLOGGER, LogToScreen) {
         EXPECT_GE(30, seconds);
         EXPECT_EQ("TRACE", trim(info11.mSeverity));
         EXPECT_EQ(std::string("test class"), trim(info11.mKind));
-        EXPECT_EQ(std::string("TestClass::testFunction(...)"), trim(info11.mFunction));
+        EXPECT_EQ(std::string("TestClass::testFunction(...)"), fixCdecl(trim(info11.mFunction)));
         EXPECT_EQ(56, info11.mLine);
-        EXPECT_EQ("Enter int TestClass::testFunction(int) const", trim(info11.mMessage));
+        EXPECT_EQ("Enter int TestClass::testFunction(int) const", fixCdecl(trim(info11.mMessage)));
 
         // Test thread safety and thread ids
         std::map<std::string, int> threadIDMap;
@@ -362,7 +373,7 @@ TEST(UKLOGGER, LogToScreen) {
             EXPECT_GE(30, seconds);
             EXPECT_EQ("INFO", trim(info.mSeverity));
             EXPECT_EQ(std::string("test main"), trim(info.mKind));
-            EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
+            EXPECT_EQ(std::string("logTenTimes(...)"), fixCdecl(trim(info.mFunction)));
             EXPECT_EQ(68, info.mLine);
             if (0 == threadIDMap.count(info.mThreadID)) {
                 threadIDMap.insert({info.mThreadID, 1});
@@ -393,7 +404,11 @@ TEST(UKLOGGER, LogToFile) {
     EXPECT_EQ(1ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
     std::filesystem::path logFileName(LOG_FOLDER);
     logFileName /= "TestUKLoggerFile.log";
-    EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() + "\"\n", output);
+    std::string logFileStr = logFileName.u8string();
+#if defined (_MSC_VER)
+    logFileStr = std::regex_replace(logFileStr, std::regex("\\\\"), "\\\\");
+#endif
+    EXPECT_EQ(std::string("Logging to \"") + logFileStr + "\"\n", output);
     std::fstream logFile;
     logFile.open(logFileName, std::ios::in);
     EXPECT_TRUE(logFile.is_open());
@@ -465,7 +480,7 @@ TEST(UKLOGGER, LogToFile) {
             EXPECT_GE(30, seconds);
             EXPECT_EQ("INFO", trim(info.mSeverity));
             EXPECT_EQ(std::string("test main"), trim(info.mKind));
-            EXPECT_EQ(std::string("logTenTimes(...)"), trim(info.mFunction));
+            EXPECT_EQ(std::string("logTenTimes(...)"),fixCdecl( trim(info.mFunction)));
             EXPECT_EQ(48, info.mLine);
             if (0 == threadIDMap.count(info.mThreadID)) {
                 threadIDMap.insert({info.mThreadID, 1});
@@ -500,7 +515,11 @@ TEST(UKLOGGER, LogToFileFailOpen) {
         std::filesystem::path logFileName(LOG_FOLDER);
         logFileName /= "Doesnotexist";
         logFileName /= "TestUKLoggerFile.log";
-        EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
+        std::string logFileStr = logFileName.u8string();
+#if defined (_MSC_VER)
+        logFileStr = std::regex_replace(logFileStr, std::regex("\\\\"), "\\\\");
+#endif        
+        EXPECT_EQ(std::string("Logging to \"") + logFileStr +"\"", lines.at(0));
 
         auto    now     = std::chrono::system_clock::now();
         auto    timer   = std::chrono::system_clock::to_time_t(now);
@@ -553,7 +572,11 @@ TEST(UKLOGGER, LogToFileCannotDelete) {
         }
         EXPECT_EQ(6ul, lines.size()) << "Unexpected number of log messages: " << lines.size();
 
-        EXPECT_EQ(std::string("Logging to \"") + logFileName.u8string() +"\"", lines.at(0));
+        std::string logFileStr = logFileName.u8string();
+#if defined (_MSC_VER)
+        logFileStr = std::regex_replace(logFileStr, std::regex("\\\\"), "\\\\");
+#endif 
+        EXPECT_EQ(std::string("Logging to \"") + logFileStr +"\"", lines.at(0));
         auto    now     = std::chrono::system_clock::now();
         auto    timer   = std::chrono::system_clock::to_time_t(now);
 
