@@ -29,7 +29,7 @@ jobs:
           gistID: 6935a607aff6233d996070495bba70b7
           filename: ${{ matrix.os}}-test-succeed.json
           label: Test
-          message: ${{ steps.test_succeed.outcome == 'success' && success || failed}}
+          message: ${{ steps.test_succeed.outcome == 'success' && 'success' || 'failed'}}
           color: green
 
     - name: Fail
@@ -44,7 +44,7 @@ jobs:
           gistID: 6935a607aff6233d996070495bba70b7
           filename: ${{ matrix.os}}-test-failed.json
           label: Test
-          message: ${{ steps.test_fail.outcome == 'success' && success || failed}}
+          message: ${{ steps.test_fail.outcome == 'success' && 'success' || 'failed'}}
           color: red
 
       
