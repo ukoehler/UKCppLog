@@ -35,8 +35,24 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target show_version
 
     - name: Build
+      id: build
       # Build your program with the given configuration
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Build Badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 6935a607aff6233d996070495bba70b7
+          filename: ${{ matrix.os}}-build.json
+          label: Hello
+          message: World
+          color: green
+          # if: steps.build.outcome == 'success'
+          # color: green
+          # else:
+          # color: red
+
 
     - name: Test
       working-directory: ${{github.workspace}}/build/test

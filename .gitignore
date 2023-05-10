@@ -13,3 +13,6 @@ UKCppLog.kdev4
 
 # Ignore KDE directory files
 /.directory
+
+# Ignore helper files for GitHub Actions
+/GitHub/
