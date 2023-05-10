@@ -16,11 +16,10 @@ jobs:
     runs-on: ${{ matrix.os }}
 
     steps:
-    - uses: actions/checkout@v3
 
     - name: Succeed
       id: test_succeed 
-      run: run exit 0
+      run: exit 0
 
     - name: Build Badge
       uses: schneegans/dynamic-badges-action@v1.6.0
@@ -34,7 +33,7 @@ jobs:
 
     - name: Fail
       id: test_fail
-      run: run exit 1
+      run: exit 1
       continue-on-error: true
 
     - name: Build Badge
