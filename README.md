@@ -6,3 +6,7 @@
 
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ukoehler/UKCppLog/CMake/Build)
 [![Actions Status](https://github.com/ukoehler/UKCppLog/workflows/CMake/badge.svg)](https://github.com/ukoehler/UKCppLog/actions)
+
+**Linux / GCC**
+[![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-build.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
+[![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-test.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
