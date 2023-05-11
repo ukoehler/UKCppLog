@@ -7,14 +7,14 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ukoehler/UKCppLog/CMake/Build)
 [![Actions Status](https://github.com/ukoehler/UKCppLog/workflows/CMake/badge.svg)](https://github.com/ukoehler/UKCppLog/actions)
 
-<img src="https://simpleicons.org/icons/ubuntu.svg" width="30" height="30">**Linux / GCC**
+<img src="https://simpleicons.org/icons/ubuntu.svg" width="20" height="20">**Linux / GCC**
 [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-build.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
 [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-test.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
 
-**MacOS / Clang**
+<img src="https://simpleicons.org/icons/macos.svg" width="20" height="20">**MacOS / Clang**
 [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-build.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
 [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-test.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
 
-**Windows / VisualStudio**
+<img src="https://simpleicons.org/icons/windows.svg" width="20" height="20">**Windows / VisualStudio**
 [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-build.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
 [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-test.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
