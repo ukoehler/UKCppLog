@@ -37,7 +37,7 @@ endfunction()
 # Try to make this compiler version independent by actually checking for the
 # compiler option first
 if(MORE_COMPILER_WARNINGS)
-  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" or "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
+  if("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang" OR "${CMAKE_CXX_COMPILER_ID}" STREQUAL "AppleClang")
     # using Clang
     check_and_add_cxx_compiler_flag(WARNING_FLAGLIST -Wall)
     check_and_add_cxx_compiler_flag(WARNING_FLAGLIST -Wextra)
