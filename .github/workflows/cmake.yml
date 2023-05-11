@@ -45,18 +45,24 @@ jobs:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: 6935a607aff6233d996070495bba70b7
           filename: ${{ matrix.os}}-build.json
-          label: Hello
-          message: World
-          color: green
-          # if: steps.build.outcome == 'success'
-          # color: green
-          # else:
-          # color: red
+          label: Build
+          message: ${{ steps.build.outcome == 'success' && 'completed' || 'failed'}}
+          color: ${{ steps.build.outcome == 'success' && 'green' || 'red'}}
 
 
     - name: Test
+      id: test
       working-directory: ${{github.workspace}}/build/test
       # Execute tests defined by the CMake configuration.  
       # See https://cmake.org/cmake/help/latest/manual/ctest.1.html for more detail
       run: ctest -C ${{env.BUILD_TYPE}}
       
+    - name: Test Badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 6935a607aff6233d996070495bba70b7
+          filename: ${{ matrix.os}}-test.json
+          label: Test
+          message: ${{ steps.test.outcome == 'success' && 'passed' || 'failed'}}
+          color: ${{ steps.test.outcome == 'success' && 'green' || 'red'}}
