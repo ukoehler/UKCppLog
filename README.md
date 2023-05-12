@@ -7,8 +7,16 @@
 ![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ukoehler/UKCppLog/CMake/Build)
 [![Actions Status](https://github.com/ukoehler/UKCppLog/workflows/CMake/badge.svg)](https://github.com/ukoehler/UKCppLog/actions)
 
+<table>
+    <tr>
+        <td>
+            <a href="https://stackoverflow.com/questions/66716288/embedding-shields-io-badge-html-in-github-readme-rst"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-build.json" /></a>
+        </td>
+    </tr>
+</table>
 <!-- PROJECT SHIELDS -->
 <table align="center">
+
     <tr>
         <!-- Linux build and test -->
         <td>
