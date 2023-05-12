@@ -1,62 +1,52 @@
 # Logging for Modern C++
 
-[![Build Status](https://ci.appveyor.com/api/projects/status/1acb366xfyg3qybk/branch/develop?svg=true)](https://ci.appveyor.com/project/ukoehler/UKCppLog)
-[![Ubuntu](https://github.com/nlohmann/json/workflows/Ubuntu/badge.svg)](https://github.com/ukoehler/UKCppLog/actions?query=workflow%3AUbuntu)
-[![macOS](https://github.com/nlohmann/json/workflows/macOS/badge.svg)](https://github.com/ukoehler/UKCppLog/actions?query=workflow%3AmacOS)
-
-![GitHub Workflow Status](https://img.shields.io/github/workflow/status/ukoehler/UKCppLog/CMake/Build)
-[![Actions Status](https://github.com/ukoehler/UKCppLog/workflows/CMake/badge.svg)](https://github.com/ukoehler/UKCppLog/actions)
-
-<table>
-    <tr>
-        <td>
-            <a href="https://stackoverflow.com/questions/66716288/embedding-shields-io-badge-html-in-github-readme-rst"><img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-build.json" /></a>
-        </td>
-    </tr>
-</table>
 <!-- PROJECT SHIELDS -->
 <table align="center">
-
+    <!-- Linux build and test -->
     <tr>
-        <!-- Linux build and test -->
         <td>
             <img src="https://simpleicons.org/icons/ubuntu.svg" width="20" height="20">
         </td>
         <td>
-            **Linux / GCC**
+            Linux / GCC
         </td>
         <td>
-             [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-build.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-build.json" />
         </td>
-         <td>
-            [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-test.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
-        </td>
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-test.json" />
+        </td>    
     </tr>
-
+    <!-- MacOS build and test -->
     <tr>
-        <!-- MacOS build and test -->
         <td>
-           <img src="https://simpleicons.org/icons/macos.svg" width="20" height="20">**MacOS / Clang**
+            <img src="https://simpleicons.org/icons/macos.svg" width="20" height="20">
         </td>
         <td>
-            [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-build.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
+            MacOS / Clang
         </td>
         <td>
-           [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-test.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-build.json" />
         </td>
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-test.json" />
+        </td>    
     </tr>
-
+    <!-- Windows build and test -->
     <tr>
-        <!-- Windows build and test -->
         <td>
-           <img src="https://simpleicons.org/icons/windows.svg" width="20" height="20">**Windows / VisualStudio**
+            <img src="https://simpleicons.org/icons/windows.svg" width="20" height="20">
         </td>
         <td>
-           [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-build.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
+            Windows / VisualStudio
         </td>
         <td>
-            [![badge](https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-test.json)](https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7)
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-build.json" />
         </td>
-   </tr>
-<!-- Doxygen ClangTidy CppCheck CppLint Coverage Valgrind -->
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-test.json" />
+        </td>    
+    </tr>
+    <!-- Doxygen ClangTidy CppCheck CppLint Coverage Valgrind -->
 </table>
+
