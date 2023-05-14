@@ -46,4 +46,24 @@ jobs:
           message: ${{ steps.test_fail.outcome == 'success' && 'success' || 'failed'}}
           color: red
 
+    - name: Some output
+      id: create_output
+      uses: mathiasvr/command-output@v1
+      with: 
+        run: |
+          echo "some normal text"
+          echo "some normal text 1"
+          echo "some normal text 2"
+          echo "some normal text 3"
+          echo "some error text" >&2
+          echo "some error text 1" >&2
       
+    - name: Read output
+      run: |
+        import os
+        print("os.environ['steps.create_output.outputs.stdout']", os.environ['steps.create_output.outputs.stdout'])
+        output = ""
+        output += os.environ['steps.create_output.outputs.stdout']
+        output += os.environ['steps.create_output.outputs.stderr']
+        print("output", output)
+    shell: python
