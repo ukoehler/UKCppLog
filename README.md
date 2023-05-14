@@ -1,7 +1,7 @@
 # Logging for Modern C++
 
 <!-- PROJECT SHIELDS -->
-<table align="center">
+<table align="center" style="“border: none;”">
     <!-- Linux build and test -->
     <tr>
         <td>

@@ -35,9 +35,34 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target show_version
 
     - name: Build
+      uses: mathiasvr/command-output@v1
       id: build
-      # Build your program with the given configuration
-      run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+      with:
+        # Build your program with the given configuration
+        run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
+
+    - name: Count compiler warnings
+      run: |
+        import re 
+        output = ""
+        output += ${{ steps.build.outputs.stdout }}
+        output += ${{ steps.build.outputs.stderr }}
+        warning_count = 0;
+        stringlist = output.splitlines()
+        for line in stringlist:
+            # Visual Studio
+            ret = re.search("(.*)\(\d*,\d*\): warning C", line)
+            if ret:
+                if "UKCppLog\\test" not in ret.groups()[0]:
+                    print("  ", ret.groups()[0])
+                    warning_count += 1
+            # Clang / GCC
+            ret = re.search("(.*):\d*:\d*: warning: ", line)
+            if ret:
+                if "UKCppLog/test" not in ret.groups()[0]:
+                    print("  ", ret.groups()[0])
+                    warning_count += 1
+        print("warning_count", warning_count)
 
     - name: Build Badge
       uses: schneegans/dynamic-badges-action@v1.6.0
