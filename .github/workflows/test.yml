@@ -66,4 +66,4 @@ jobs:
         output += os.environ['steps.create_output.outputs.stdout']
         output += os.environ['steps.create_output.outputs.stderr']
         print("output", output)
-    shell: python
+      shell: python
