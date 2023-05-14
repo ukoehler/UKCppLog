@@ -44,6 +44,9 @@ jobs:
     - name: Count compiler warnings
       run: |
         import re 
+        import os
+        print("steps.build.outputs.stdout", ${{ steps.build.outputs.stdout }})
+        print("os.environ['steps.build.outputs.stdout']", os.environ['steps.build.outputs.stdout'])
         output = ""
         output += ${{ steps.build.outputs.stdout }}
         output += ${{ steps.build.outputs.stderr }}
@@ -63,6 +66,12 @@ jobs:
                     print("  ", ret.groups()[0])
                     warning_count += 1
         print("warning_count", warning_count)
+        os.environ['compile_warnings'] = warnings
+        if 0 == warnings:
+          os.environ['compile_warnings_color'] = "green"
+        else:
+          os.environ['compile_warnings_color'] = "orange"
+      shell: python
 
     - name: Build Badge
       uses: schneegans/dynamic-badges-action@v1.6.0
@@ -73,6 +82,16 @@ jobs:
           label: Build
           message: ${{ steps.build.outcome == 'success' && 'completed' || 'failed'}}
           color: ${{ steps.build.outcome == 'success' && 'green' || 'red'}}
+    - name: Build Badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+          auth: ${{ secrets.GIST_SECRET }}
+          gistID: 6935a607aff6233d996070495bba70b7
+          filename: ${{ matrix.os}}-build-warnings.json
+          label: Compiler warnings
+          message: ${{ env.compile_warnings }}
+          color: ${{ env.compile_warnings_color }}
+
 
 
     - name: Test
