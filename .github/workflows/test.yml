@@ -60,10 +60,8 @@ jobs:
       
     - name: Read output
       run: |
-        import os
-        print("os.environ['steps.create_output.outputs.stdout']", os.environ['steps.create_output.outputs.stdout'])
         output = ""
-        output += os.environ['steps.create_output.outputs.stdout']
-        output += os.environ['steps.create_output.outputs.stderr']
+        output += ${{ steps.create_output.outputs.stdout }}
+        output += ${{ steps.create_output.outputs.stderr }}
         print("output", output)
       shell: python
