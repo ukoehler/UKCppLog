@@ -68,7 +68,7 @@ jobs:
                     warning_count += 1
         print("warning_count", warning_count)
         os.environ['compile_warnings'] = f"{warning_count}"
-        if 0 == warnings:
+        if 0 == warning_count:
           os.environ['compile_warnings_color'] = "green"
         else:
           os.environ['compile_warnings_color'] = "orange"
