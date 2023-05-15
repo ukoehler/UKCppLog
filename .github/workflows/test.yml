@@ -59,9 +59,9 @@ jobs:
           echo "some error text 1" >&2
       
     - name: Printenv
-        id: printenv
-        run: printenv
-        
+      id: printenv
+      run: printenv
+
     - name: Read output
       run: |
         output = ""
