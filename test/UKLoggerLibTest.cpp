@@ -37,10 +37,14 @@
 #endif
  
 namespace {
+int subTestCount;
+int successfulSubTestCount;
+
 // See PrettyUnitTestResultPrinter in gtest.cc and EmptyTestEventListener in gtest.h
 // Add gtest output to logfile
 class LogPrinter : public ::testing::EmptyTestEventListener {
  private:
+
     // Called before any test activity starts.
     void OnTestProgramStart(const ::testing::UnitTest& /* unit_test */) override {}
 
@@ -63,22 +67,28 @@ class LogPrinter : public ::testing::EmptyTestEventListener {
 
     // Called before a test starts.
     void OnTestStart(const ::testing::TestInfo& test_info) override {
+        std::cout << "OnTestStart" << std::endl;
         std::ostringstream s;
         s << "=== Starting Test " << test_info.test_case_name() << "." << test_info.name();
         UKLOG_INFO("TestSystem", s.str());
     }
 
     // Called after a failed assertion or a SUCCEED() invocation.
-    void OnTestPartResult(const ::testing::TestPartResult& test_part_result) override {
+    virtual void OnTestPartResult(const ::testing::TestPartResult& test_part_result) override {
+        std::cout << "OnTestPartResult" << std::endl;
         std::ostringstream s;
         if (test_part_result.failed()) {
             s << "*** Failure in " << test_part_result.file_name() << ":" << test_part_result.line_number();
             s << " " << test_part_result.summary();
             UKLOG_ERROR("TestSystem", s.str());
+            subTestCount++;
         } else {
             s << "*** Success in " << test_part_result.file_name() << ":" << test_part_result.line_number();
             s << " " << test_part_result.summary();
             UKLOG_INFO("TestSystem", s.str());
+            subTestCount++;
+            successfulSubTestCount++;
+            std::cout << subTestCount << " " << successfulSubTestCount << std::endl;
         }
     }
 
@@ -126,13 +136,16 @@ class LogPrinter : public ::testing::EmptyTestEventListener {
         std::ostringstream s;
         if (unit_test.Failed()) {
             s << "###### FAILED (" << unit_test.failed_test_count() << " of " << unit_test.total_test_count()
-              << " failed) in " << unit_test.elapsed_time() / 1000.0 << " s";
+              << " failed, " << subTestCount-successfulSubTestCount
+              << " of " << subTestCount << " failed) in " << unit_test.elapsed_time() / 1000.0 << " s";
             UKLOG_ERROR("TestSystem", s.str());
             std::cout << "\"" << s.str() << "\"" << std::endl;
         } else {
             s << "###### PASSED (" << unit_test.failed_test_count() << " of " << unit_test.total_test_count()
-              << " failed) in " << unit_test.elapsed_time() / 1000.0 << " s";
+              << " failed), " << subTestCount-successfulSubTestCount
+              << " of " << subTestCount << " failed) in " << unit_test.elapsed_time() / 1000.0 << " s";
             UKLOG_INFO("TestSystem", s.str());
+            std::cout << "\"" << s.str() << "\"" << std::endl;
         }
     }
 };  // LogPrinter
@@ -606,6 +619,8 @@ TEST(UKLOGGER, LogToFileCannotDelete) {
 }
 
 int main(int argc, char** argv) {
+    subTestCount = 0;
+    successfulSubTestCount = 0;
     std::filesystem::path logFileName(LOG_FOLDER);
     logFileName /= "UKLoggerLibTest.log";
     std::cout << "Logging to " << logFileName << std::endl;

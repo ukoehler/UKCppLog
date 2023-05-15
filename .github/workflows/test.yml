@@ -69,7 +69,7 @@ jobs:
     - name: Read output
       run: |
         output = ""
-        output += "${{ steps.create_output.outputs.stdout }}"
-        output += "${{ steps.create_output.outputs.stderr }}"
+        output += r"${{ steps.create_output.outputs.stdout }}"
+        output += r"${{ steps.create_output.outputs.stderr }}"
         print("output", output)
       shell: python
