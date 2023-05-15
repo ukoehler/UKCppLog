@@ -33,6 +33,9 @@
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-build.json" />
         </td>
         <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-build-warnings.json" />
+        </td>   
+        <td>
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/macos-latest-test.json" />
         </td>    
     </tr>
@@ -47,6 +50,9 @@
         <td>
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-build.json" />
         </td>
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-build-warnings.json" />
+        </td>   
         <td>
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-test.json" />
         </td>    
