@@ -67,9 +67,13 @@ jobs:
       run: more $GITHUB_OUTPUT
 
     - name: Read output
+      env:
+        IN_STDOUT: "${{ steps.create_output.outputs.stdout }}"
+        IN_STDERR: "${{ steps.create_output.outputs.stderr }}"
       run: |
+        import os
         output = ""
-        output += r"${{ steps.create_output.outputs.stdout }}"
-        output += r"${{ steps.create_output.outputs.stderr }}"
+        output += os.environ.get('IN_STDOUT')
+        output += os.environ.get('IN_STDERR')
         print("output", output)
       shell: python
