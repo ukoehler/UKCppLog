@@ -69,7 +69,7 @@ jobs:
         print("warning_count", warning_count)
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:
-          file.write(f"compile_warnings={warning_count}")
+          file.write(f"compile_warnings={warning_count}\n")
           if 0 == warning_count:
             file.write(f"compile_warnings_color=green")
           else:
