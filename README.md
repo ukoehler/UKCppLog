@@ -19,7 +19,6 @@
         <td>
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-test.json" />
         </td>    
- 
     </tr>
     <!-- MacOS build and test -->
     <tr>
