@@ -62,6 +62,10 @@ jobs:
       id: printenv
       run: printenv
 
+    - name: More output
+      id: more_output
+      run: more $GITHUB_OUTPUT
+
     - name: Read output
       run: |
         output = ""
