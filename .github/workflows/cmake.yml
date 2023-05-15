@@ -67,7 +67,7 @@ jobs:
                     print("  ", ret.groups()[0])
                     warning_count += 1
         print("warning_count", warning_count)
-        os.environ['compile_warnings'] = warnings
+        os.environ['compile_warnings'] = warnings_count
         if 0 == warnings:
           os.environ['compile_warnings_color'] = "green"
         else:
@@ -83,7 +83,7 @@ jobs:
           label: Build
           message: ${{ steps.build.outcome == 'success' && 'completed' || 'failed'}}
           color: ${{ steps.build.outcome == 'success' && 'green' || 'red'}}
-    - name: Build Badge
+    - name: Build Warnings Badge
       uses: schneegans/dynamic-badges-action@v1.6.0
       with:
           auth: ${{ secrets.GIST_SECRET }}
