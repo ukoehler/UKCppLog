@@ -42,13 +42,16 @@ jobs:
         run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}}
 
     - name: Count compiler warnings
+      env:
+        IN_STDOUT: "${{ steps.build.outputs.stdout }}"
+        IN_STDERR: "${{ steps.build.outputs.stderr }}"
       run: |
         import re 
         import os
         print("os.environ['steps.build.outputs.stdout']", os.environ['steps.build.outputs.stdout'])
         output = ""
-        output += os.environ['steps.build.outputs.stdout']
-        output += os.environ['steps.build.outputs.stderr']
+        output += os.environ.get('IN_STDOUT')
+        output += os.environ.get('IN_STDERR')
         warning_count = 0;
         stringlist = output.splitlines()
         for line in stringlist:
