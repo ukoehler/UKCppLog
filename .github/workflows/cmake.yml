@@ -48,7 +48,6 @@ jobs:
       run: |
         import re 
         import os
-        print("os.environ['steps.build.outputs.stdout']", os.environ['steps.build.outputs.stdout'])
         output = ""
         output += os.environ.get('IN_STDOUT')
         output += os.environ.get('IN_STDERR')
