@@ -166,7 +166,7 @@ void UKLogger::moveToTerminal() {
 // public access to instance
 UKLogger& logger() {
     // Do not use new here, as the destructor will not be called than
-    [[clang::no_destroy]] static UKLogger inst;
+    static UKLogger inst;
     return inst;
 }
 }  // namespace uk::log
