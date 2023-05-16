@@ -35,7 +35,7 @@ jobs:
       run: cmake --build ${{github.workspace}}/build --config ${{env.BUILD_TYPE}} --target show_version
 
     - name: Build
-      uses: mathiasvr/command-output@v1
+      uses: mathiasvr/command-output@v2.0.0
       id: build
       with:
         # Build your program with the given configuration
@@ -69,11 +69,11 @@ jobs:
         print("warning_count", warning_count)
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:
-          file.write(f"compile_warnings={warning_count}\n")
+          file.write("compile_warnings={}\n".format(warning_count))
           if 0 == warning_count:
-            file.write(f"compile_warnings_color=green")
+            file.write("compile_warnings_color=green")
           else:
-            file.write(f"compile_warnings_color=orange")
+            file.write("compile_warnings_color=orange")
       shell: python
 
     - name: Build Badge
