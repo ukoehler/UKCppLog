@@ -5,7 +5,8 @@
     <!-- Linux build and test -->
     <tr>
         <td>
-            <img src="https://simpleicons.org/icons/ubuntu.svg" width="20" height="20">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/UbuntuCoF.svg" width="20" height="20">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/a/af/GNU_Compiler_Collection_logo.svg" width="20" height="20">
         </td>
         <td>
             Linux / GCC
@@ -23,7 +24,8 @@
     <!-- MacOS build and test -->
     <tr>
         <td>
-            <img src="https://simpleicons.org/icons/macos.svg" width="20" height="20">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/0/00/MacOS_wordmark.svg" width="20" height="20">
+            <img src="https://llvm.org/img/DragonSmall.png" width="20" height="20">
         </td>
         <td>
             MacOS / Clang
@@ -42,6 +44,7 @@
     <tr>
         <td>
             <img src="https://simpleicons.org/icons/windows.svg" width="20" height="20">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/5/59/Visual_Studio_Icon_2019.svg" width="20" height="20">
         </td>
         <td>
             Windows / VisualStudio
