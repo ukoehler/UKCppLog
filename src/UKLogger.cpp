@@ -31,7 +31,7 @@
 #include <thread>
 
 namespace uk::log {
-UKLogger::UKLogger() : mInitialBuffer(""), mFileStream() {
+UKLogger::UKLogger() : mMutex(), mInitialBuffer(""), mFileStream() {
     log("INFO", "Startup", static_cast<const char*>(__PRETTY_FUNCTION__),
         std::string("Create logger Version ") + VERSION_STRING, __LINE__);
 }
@@ -166,7 +166,7 @@ void UKLogger::moveToTerminal() {
 // public access to instance
 UKLogger& logger() {
     // Do not use new here, as the destructor will not be called than
-    static UKLogger inst;
+    [[clang::no_destroy]] static UKLogger inst;
     return inst;
 }
 }  // namespace uk::log
