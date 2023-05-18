@@ -134,7 +134,7 @@ jobs:
         import os
 
         output = ""
-        with open(os.path.join(os.path.expanduser('~'), "clang-tidy.txt)") as file:
+        with open(os.path.join(os.path.expanduser('~'), "clang-tidy.txt")) as file:
             output += file.read()
         
         warning_count = 0
