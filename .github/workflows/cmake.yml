@@ -243,3 +243,60 @@ jobs:
         label: Cppcheck
         message: ${{ env.cppcheck_warnings }}
         color: ${{ env.cppcheck_warnings_color }}
+
+    - name: Install cpplint
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install cpplint
+
+    - name: Run cpplint
+      if: matrix.os == 'ubuntu-latest'
+      continue-on-error: true
+      run: |
+        cd ${{github.workspace}}/src
+        cpplint --linelength=120 --filter=-build/include_subdir,-build/include_order,-build/c++11 *.cpp *.hpp
+        
+    - name: Show outputfile
+      if: matrix.os == 'ubuntu-latest'
+      run: more ~/cpplint.txt
+
+
+    - name: Analyse cpplint
+      if: matrix.os == 'ubuntu-latest'
+      run : |
+        import re
+        import os
+        
+        output = ""
+        with open(os.path.join(os.path.expanduser('~'), "cpplint.txt")) as file:
+            output += file.read()
+        
+        warning_count = 0
+        stringlist = output.splitlines()
+        for line in stringlist:
+          ret = re.search(":\d*: ", line)
+          if ret:
+              warning_count += 1
+        
+        print("warning_count", warning_count)
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          file.write("cpplint_warnings={}\n".format(warning_count))
+          if 6 >= warning_count:
+            file.write("cpplint_warnings_color=green")
+          else:
+            file.write("cpplint_warnings_color=orange")
+
+      shell: python
+
+    - name: Cpplint Warnings Badge
+      if: matrix.os == 'ubuntu-latest'
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ${{ matrix.os}}-cpplint-warnings.json
+        label: Cpplint
+        message: ${{ env.cpplint_warnings }}
+        color: ${{ env.cpplint_warnings_color }}
