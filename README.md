@@ -59,6 +59,17 @@
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/windows-latest-test.json" />
         </td>    
     </tr>
+    <tr>
+        <td></td>
+         <td>
+            Static code checks
+        </td>       
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-clang-tidy-warnings.json" />
+        </td>    
+      <td></td>
+        <td></td>
+     </tr>
     <!-- Doxygen ClangTidy CppCheck CppLint Coverage Valgrind -->
 </table>
 

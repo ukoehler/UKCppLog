@@ -38,7 +38,7 @@ function(add_static_code_checks_to_target TARGET)
             # -fuchsia-default-arguments-calls: cannot really be avoided when using STL
             # -altera-unroll-loops: keeps things understandable
             # -llvm-include-order: not the order I want and conflicts with cpplint
-            set_target_properties(${TARGET_LIB} PROPERTIES CXX_CLANG_TIDY "${CLANG-TIDY-EXE};-header-filter=RecipeBook;-checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-altera-unroll-loops,-llvm-include-order")
+            set_target_properties(${TARGET_LIB} PROPERTIES CXX_CLANG_TIDY "${CLANG-TIDY-EXE};-header-filter=UKCppLog;-checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-altera-unroll-loops,-llvm-include-order")
         endif()
         if(CPPCHECK-EXE)
             set_target_properties(${TARGET} PROPERTIES CXX_CPPCHECK "cppcheck;--enable=all;")

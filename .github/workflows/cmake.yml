@@ -100,8 +100,6 @@ jobs:
           message: ${{ env.compile_warnings }}
           color: ${{ env.compile_warnings_color }}
 
-
-
     - name: Test
       id: test
       working-directory: ${{github.workspace}}/build/test
@@ -118,3 +116,62 @@ jobs:
           label: Test
           message: ${{ steps.test.outcome == 'success' && 'passed' || 'failed'}}
           color: ${{ steps.test.outcome == 'success' && 'green' || 'red'}}
+
+    - name: Run clang-tidy
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        cd ${{github.workspace}}/src
+        clang-tidy -header-filter=UKCppLog -checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-altera-unroll-loops,-llvm-include-order,-cppcoreguidelines-macro-usage,-abseil-string-find-startswith *.cpp *.hpp -- -I/usr/include/ -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -std=c++17 -DVERSION_STRING=\"0.0.0\" > ~/clang-tidy.txt 2>&1
+  
+    - name: Show outputfile
+      if: matrix.os == 'ubuntu-latest'
+      run: more ~/clang-tidy.txt
+
+    - name: Analyse clang-tidy
+      if: matrix.os == 'ubuntu-latest'
+      run : |
+        import re
+
+        output = ""
+        with open("/var/data1/home/ukoehler/devel/C++/UKCppLog/GitHub/samples/clang-tidy.txt") as file:
+            output += file.read()
+        
+        warning_count = 0
+        error_count = 0
+        stringlist = output.splitlines()
+        for line in stringlist:
+            ret = re.search(":\d*:\d*: warning:", line)
+            if ret:
+                warning_count += 1
+            ret = re.search(":\d*:\d*: error:", line)
+            if ret:
+                error_count += 1
+        
+        print("warning_count", warning_count)
+        print("error_count", error_count)
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          if 0 < error_count: 
+            file.write("clang_tidy_warnings={} errors\n".format(error_count))
+          else:
+            file.write("clang_tidy_warnings={} warnings\n".format(warning_count
+          if 0 < error_count: 
+            file.write("clang_tidy_warnings_color=red")
+          else:
+            if 6 >= warning_count:
+              file.write("clang_tidy_warnings_color=green")
+            else:
+              file.write("clang_tidy_warnings_color=orange")
+
+      shell: python
+
+    - name: Clang-tidy Warnings Badge
+      if: matrix.os == 'ubuntu-latest'
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ${{ matrix.os}}-clang-tidy-warnings.json
+        label: Clang-tidy
+        message: ${{ env.clang_tidy_warnings }}
+        color: ${{ env.clang_tidy_warnings_color }}
