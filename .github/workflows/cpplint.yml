@@ -1,0 +1,24 @@
+name: cppcheck
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install cppcheck
+      run: |
+        sudo apt-get update
+        sudo apt-get install cpplint
+
+    - uses: actions/checkout@v3
+
+    - name: Run cppcheck
+      run: |
+        cd ${{github.workspace}}/src
+        cpplint --linelength=120 --filter=-build/include_subdir,-build/include_order,-build/c++11 *.cpp *.hpp > ~/cpplint.txt 2>&1
+
+    - name: Show outputfile
+      run: more ~/cpplint.txt
