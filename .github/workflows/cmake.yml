@@ -154,7 +154,7 @@ jobs:
           if 0 < error_count: 
             file.write("clang_tidy_warnings={} errors\n".format(error_count))
           else:
-            file.write("clang_tidy_warnings={} warnings\n".format(warning_count
+            file.write("clang_tidy_warnings={} warnings\n".format(warning_count))
           if 0 < error_count: 
             file.write("clang_tidy_warnings_color=red")
           else:
