@@ -1,4 +1,4 @@
-name: cppcheck
+name: cpplint
 
 on:
   workflow_dispatch:

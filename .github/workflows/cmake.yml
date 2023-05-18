@@ -184,11 +184,13 @@ jobs:
         sudo apt-get install cppcheck
 
     - name: Run cppcheck
+      if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{github.workspace}}/src
         cppcheck --enable=all  *.cpp *.hpp > ~/cppcheck.txt 2>&1
 
     - name: Show outputfile
+      if: matrix.os == 'ubuntu-latest'
       run: more ~/cppcheck.txt
 
     - name: Analyse cppcheck
@@ -238,6 +240,6 @@ jobs:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: 6935a607aff6233d996070495bba70b7
         filename: ${{ matrix.os}}-cppcheck-warnings.json
-        label: Clang-tidy
+        label: Cppcheck
         message: ${{ env.cppcheck_warnings }}
         color: ${{ env.cppcheck_warnings_color }}
