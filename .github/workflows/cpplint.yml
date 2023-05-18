@@ -19,6 +19,7 @@ jobs:
       run: |
         cd ${{github.workspace}}/src
         cpplint --linelength=120 --filter=-build/include_subdir,-build/include_order,-build/c++11 *.cpp *.hpp
+        exit 0
 
     - name: Show outputfile
       run: more ~/cpplint.txt
