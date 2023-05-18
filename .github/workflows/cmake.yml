@@ -255,7 +255,7 @@ jobs:
       continue-on-error: true
       run: |
         cd ${{github.workspace}}/src
-        cpplint --linelength=120 --filter=-build/include_subdir,-build/include_order,-build/c++11 *.cpp *.hpp
+        cpplint --linelength=120 --filter=-build/include_subdir,-build/include_order,-build/c++11 *.cpp *.hpp > ~/cpplint.txt 2>&1
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
