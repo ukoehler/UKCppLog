@@ -11,7 +11,7 @@ jobs:
     - uses: actions/checkout@v3
 
     - name: Run clang-tidy
-      run: clang-tidy -p ../build -header-filter=UKCppLog -checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-altera-unroll-loops,-llvm-include-order,-cppcoreguidelines-macro-usage *.cpp *.hpp -- -I/usr/include/ -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -std=c++17 -DVERSION_STRING=\"0.0.0\" > ~/clang-tidy.txt 2>&1
+      run: clang-tidy -p ../build -header-filter=UKCppLog -checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-altera-unroll-loops,-llvm-include-order,-cppcoreguidelines-macro-usage *.cpp *.hpp -- -I/usr/include/ -I/usr/include/x86_64-linux-gnu -I/usr/lib/gcc/x86_64-linux-gnu/11/include -I/usr/include/c++/11 -I/usr/include/x86_64-linux-gnu/c++/11 -std=c++17 -DVERSION_STRING=\"0.0.0\"
 
     - name: Show outputfile
       run: more ~/clang-tidy.txt
