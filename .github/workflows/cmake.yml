@@ -133,7 +133,7 @@ jobs:
         import re
 
         output = ""
-        with open("/var/data1/home/ukoehler/devel/C++/UKCppLog/GitHub/samples/clang-tidy.txt") as file:
+        with open("~/clang-tidy.txt") as file:
             output += file.read()
         
         warning_count = 0
