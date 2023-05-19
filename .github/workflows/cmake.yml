@@ -300,3 +300,135 @@ jobs:
         label: Cpplint
         message: ${{ env.cpplint_warnings }}
         color: ${{ env.cpplint_warnings_color }}
+
+    - name: Install valgrind
+      if: matrix.os == 'ubuntu-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install valgrind
+
+    - name: Run valgrind memcheck
+      if: matrix.os == 'ubuntu-latest'
+      continue-on-error: true
+      run: |
+        cd ${{github.workspace}}/build/test
+        valgrind --trace-children=yes --xml=yes --xml-file=~/valgrind.xml --log-file=~/valgrind.log ./UKLoggerLibTest
+        
+    - name: Show outputfile
+      if: matrix.os == 'ubuntu-latest'
+      run: more ~/valgrind.xml
+
+    - name: Analyse valgrind
+      if: matrix.os == 'ubuntu-latest'
+      run : |
+        from xml.dom import minidom
+        import os
+
+        doc = minidom.parse(os.path.join(os.path.expanduser('~'), "valgrind.xml"))
+        root = doc.getElementsByTagName('error')
+
+        print(len(root))
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          file.write("vagrind_warnings={}\n".format(len(root)))
+          if 1 >= len(root):
+            file.write("valgrind_warnings_color=green")
+          else:
+            file.write("vagrind_warnings_color=orange")
+
+      shell: python
+
+    - name: Valgrind Warnings Badge
+      if: matrix.os == 'ubuntu-latest'
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ${{ matrix.os}}-valgrind-warnings.json
+        label: Memcheck
+        message: ${{ env.valgrind_warnings }}
+        color: ${{ env.valgrind_warnings_color }}
+
+    - name: Run valgrind helgrind
+      if: matrix.os == 'ubuntu-latest'
+      continue-on-error: true
+      run: |
+        cd ${{github.workspace}}/build/test
+        valgrind --tool=helgrind --trace-children=yes --xml=yes --xml-file=~/helgrind.xml --log-file=~/helgrind.log ./UKLoggerLibTest
+        
+    - name: Show outputfile
+      if: matrix.os == 'ubuntu-latest'
+      run: more ~/helgrind.xml
+
+    - name: Analyse helgrind
+      if: matrix.os == 'ubuntu-latest'
+      run : |
+        from xml.dom import minidom
+        import os
+
+        doc = minidom.parse(os.path.join(os.path.expanduser('~'), "helgrind.xml"))
+        root = doc.getElementsByTagName('error')
+
+        print(len(root))
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          file.write("helgrind_warnings={}\n".format(len(root)))
+          if 1 >= len(root):
+            file.write("helgrind_warnings_color=green")
+          else:
+            file.write("helgrind_warnings_color=orange")
+
+      shell: python
+
+    - name: Helgrind Warnings Badge
+      if: matrix.os == 'ubuntu-latest'
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ${{ matrix.os}}-helgrind-warnings.json
+        label: Helgrind
+        message: ${{ env.helgrind_warnings }}
+        color: ${{ env.helgrind_warnings_color }}
+
+    - name: Run valgrind drd
+      if: matrix.os == 'ubuntu-latest'
+      continue-on-error: true
+      run: |
+        cd ${{github.workspace}}/build/test
+        valgrind --tool=drd --trace-children=yes --xml=yes --xml-file=~/drd.xml --log-file=~/drd.log ./UKLoggerLibTest
+        
+    - name: Show outputfile
+      if: matrix.os == 'ubuntu-latest'
+      run: more ~/drd.xml
+
+    - name: Analyse drd
+      if: matrix.os == 'ubuntu-latest'
+      run : |
+        from xml.dom import minidom
+        import os
+
+        doc = minidom.parse(os.path.join(os.path.expanduser('~'), "drd.xml"))
+        root = doc.getElementsByTagName('error')
+
+        print(len(root))
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          file.write("drd_warnings={}\n".format(len(root)))
+          if 1 >= len(root):
+            file.write("drd_warnings_color=green")
+          else:
+            file.write("drd_warnings_color=orange")
+
+      shell: python
+
+    - name: Helgrind Warnings Badge
+      if: matrix.os == 'ubuntu-latest'
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ${{ matrix.os}}-drd-warnings.json
+        label: DRD
+        message: ${{ env.drd_warnings }}
+        color: ${{ env.drd_warnings_color }}
