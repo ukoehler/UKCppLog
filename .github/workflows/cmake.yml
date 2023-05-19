@@ -309,10 +309,9 @@ jobs:
 
     - name: Run valgrind memcheck
       if: matrix.os == 'ubuntu-latest'
-      continue-on-error: true
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --trace-children=yes --xml=yes --xml-file=~/valgrind.xml --log-file=~/valgrind.log ./UKLoggerLibTest
+        valgrind --trace-children=yes --xml=yes --xml-file=$HOME/valgrind.xml --log-file=$HOME/valgrind.log ./UKLoggerLibTest
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
@@ -351,10 +350,9 @@ jobs:
 
     - name: Run valgrind helgrind
       if: matrix.os == 'ubuntu-latest'
-      continue-on-error: true
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --tool=helgrind --trace-children=yes --xml=yes --xml-file=~/helgrind.xml --log-file=~/helgrind.log ./UKLoggerLibTest
+        valgrind --tool=helgrind --trace-children=yes --xml=yes --xml-file=$HOME/helgrind.xml --log-file=$HOME/helgrind.log ./UKLoggerLibTest
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
@@ -393,10 +391,9 @@ jobs:
 
     - name: Run valgrind drd
       if: matrix.os == 'ubuntu-latest'
-      continue-on-error: true
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --tool=drd --trace-children=yes --xml=yes --xml-file=~/drd.xml --log-file=~/drd.log ./UKLoggerLibTest
+        valgrind --tool=drd --trace-children=yes --xml=yes --xml-file=$HOME/drd.xml --log-file=$HOME/drd.log ./UKLoggerLibTest
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
