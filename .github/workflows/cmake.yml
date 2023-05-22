@@ -321,7 +321,12 @@ jobs:
 
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
-      run: more ~/valgrind.xml
+      run: |
+        more ~/valgrind_main.xml
+        more ~/valgrind_screen.xml
+        more ~/valgrind_file.xml
+        more ~/valgrind_delete.xml
+        more ~/valgrind_open.xml
 
     - name: Analyse valgrind
       if: matrix.os == 'ubuntu-latest'
@@ -355,7 +360,7 @@ jobs:
         gistID: 6935a607aff6233d996070495bba70b7
         filename: ${{ matrix.os}}-valgrind-warnings.json
         label: Memcheck
-        message: ${{ env.valgrind_warnings }}
+        message: ${{ env.vagrind_warnings }}
         color: ${{ env.valgrind_warnings_color }}
 
     - name: Run valgrind helgrind
@@ -371,7 +376,12 @@ jobs:
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
-      run: more ~/helgrind.xml
+      run: |
+        more ~/helgrind-main.xml
+        more ~/helgrind-file.xml
+        more ~/helgrind-screen.xml
+        more ~/helgrind-delete.xml
+        more ~/helgrind-open.xml
 
     - name: Analyse helgrind
       if: matrix.os == 'ubuntu-latest'
@@ -424,7 +434,12 @@ jobs:
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
-      run: more ~/drd.xml
+      run: |
+        more ~/drd-main.xml
+        more ~/drd-file.xml
+        more ~/drd-screen.xml
+        more ~/drd-delete.xml
+        more ~/drd-open.xml
 
     - name: Analyse drd
       if: matrix.os == 'ubuntu-latest'
