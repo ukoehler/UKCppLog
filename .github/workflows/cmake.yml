@@ -308,11 +308,16 @@ jobs:
         sudo apt-get install valgrind
 
     - name: Run valgrind memcheck
+      # valgrind with --trace-children=yes --xml=yes is totally broken
       if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --trace-children=yes --xml=yes --xml-file=$HOME/valgrind.xml --log-file=$HOME/valgrind.log ./UKLoggerLibTest
-        
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-main.xml --log-file=$HOME/valgrind-main.log ./UKLoggerLibTest
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-file.xml --log-file=$HOME/valgrind-file.log ./testukcpplogfile
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-delete.xml --log-file=$HOME/valgrind-delete.log ./testukcpplogfilecannotdelete
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-open.xml --log-file=$HOME/valgrind-open.log ./testukcpplogfilefailopen
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-screen.xml --log-file=$HOME/valgrind-screen.log ./testukcpplogscreen
+
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
       run: more ~/valgrind.xml
@@ -322,19 +327,23 @@ jobs:
       run : |
         from xml.dom import minidom
         import os
-
-        doc = minidom.parse(os.path.join(os.path.expanduser('~'), "valgrind.xml"))
-        root = doc.getElementsByTagName('error')
-
-        print(len(root))
+        import pathlib
+        
+        error_count = 0
+        path = pathlib.Path(os.path.expanduser('~'))
+        for file_name in path.glob("valgrind-*.xml"):
+          print(file_name)
+          doc = minidom.parse(str(file_name))
+          root = doc.getElementsByTagName('error')
+          error_count += len(root)
+        print(error_count)
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:
-          file.write("vagrind_warnings={}\n".format(len(root)))
-          if 1 >= len(root):
+          file.write("vagrind_warnings={}\n".format(error_count))
+          if 1 >= error_count:
             file.write("valgrind_warnings_color=green")
           else:
             file.write("vagrind_warnings_color=orange")
-
       shell: python
 
     - name: Valgrind Warnings Badge
@@ -352,7 +361,11 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --tool=helgrind --trace-children=yes --xml=yes --xml-file=$HOME/helgrind.xml --log-file=$HOME/helgrind.log ./UKLoggerLibTest
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-main.xml --log-file=$HOME/helgrind-main.log ./UKLoggerLibTest
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-file.xml --log-file=$HOME/helgrind-file.log ./testukcpplogfile
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-delete.xml --log-file=$HOME/helgrind-delete.log ./testukcpplogfilecannotdelete
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-open.xml --log-file=$HOME/helgrind-open.log ./testukcpplogfilefailopen
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-screen.xml --log-file=$HOME/helgrind-screen.log ./testukcpplogscreen
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
@@ -363,15 +376,22 @@ jobs:
       run : |
         from xml.dom import minidom
         import os
+        import pathlib
 
-        doc = minidom.parse(os.path.join(os.path.expanduser('~'), "helgrind.xml"))
-        root = doc.getElementsByTagName('error')
+        error_count = 0
+        path = pathlib.Path(os.path.expanduser('~'))
+        for file_name in path.glob("helgrind-*.xml"):
+          print(file_name)
+          doc = minidom.parse(str(file_name))
+          root = doc.getElementsByTagName('error')
+          error_count += len(root)
+        print(error_count)
 
         print(len(root))
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:
-          file.write("helgrind_warnings={}\n".format(len(root)))
-          if 1 >= len(root):
+          file.write("helgrind_warnings={}\n".format(error_count))
+          if 1 >= error_count:
             file.write("helgrind_warnings_color=green")
           else:
             file.write("helgrind_warnings_color=orange")
@@ -393,7 +413,11 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --tool=drd --trace-children=yes --xml=yes --xml-file=$HOME/drd.xml --log-file=$HOME/drd.log ./UKLoggerLibTest
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-main.xml --log-file=$HOME/drd-main.log ./UKLoggerLibTest
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-file.xml --log-file=$HOME/drd-file.log ./testukcpplogfile
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-delete.xml --log-file=$HOME/drd-delete.log ./testukcpplogfilecannotdelete
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-open.xml --log-file=$HOME/drd-open.log ./testukcpplogfilefailopen
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-screen.xml --log-file=$HOME/drd-screen.log ./testukcpplogscreen
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
@@ -404,15 +428,21 @@ jobs:
       run : |
         from xml.dom import minidom
         import os
+        import pathlib
 
-        doc = minidom.parse(os.path.join(os.path.expanduser('~'), "drd.xml"))
-        root = doc.getElementsByTagName('error')
+        error_count = 0
+        path = pathlib.Path(os.path.expanduser('~'))
+        for file_name in path.glob("drd-*.xml"):
+          print(file_name)
+          doc = minidom.parse(str(file_name))
+          root = doc.getElementsByTagName('error')
+          error_count += len(root)
+        print(error_count)
 
-        print(len(root))
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:
-          file.write("drd_warnings={}\n".format(len(root)))
-          if 1 >= len(root):
+          file.write("drd_warnings={}\n".format(error_count))
+          if 1 >= error_count:
             file.write("drd_warnings_color=green")
           else:
             file.write("drd_warnings_color=orange")
