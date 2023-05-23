@@ -92,3 +92,5 @@
     <!-- Doxygen ClangTidy CppCheck CppLint Coverage Valgrind -->
 </table>
 
+[Doxygen documentation](https://ukoehler.github.io/UKCppLog/index.html) 
+
