@@ -32,6 +32,6 @@ jobs:
       shell: bash
 
     - name: Deploy to GitHub Pages
-      uses: JamesIves/github-pages-deploy-action@4
+      uses: JamesIves/github-pages-deploy-action@v4.4.1
       with:
         folder: ${{github.workspace}}/build/doc/html
