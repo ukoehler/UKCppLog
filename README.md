@@ -89,7 +89,20 @@
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-drd-warnings.json" />
          </td>
      </tr>
-    <!-- Doxygen ClangTidy CppCheck CppLint Coverage Valgrind -->
+          <tr>
+        <td></td>
+         <td>
+            Documentation
+        </td>       
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-doxygen-warnings.json" />
+        </td>    
+        <td>
+        </td>
+        <td>
+         </td>
+     </tr>
+    <!-- Doxygen Coverage -->
 </table>
 
 [Doxygen documentation](https://ukoehler.github.io/UKCppLog/index.html) 
