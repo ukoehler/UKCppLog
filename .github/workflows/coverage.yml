@@ -1,0 +1,84 @@
+name: doxygen
+
+on:
+  workflow_dispatch:
+
+env:
+    # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+    BUILD_TYPE: Release
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Install lcov
+      run: |
+        sudo apt-get update
+        sudo apt-get install lcov
+
+    - uses: actions/checkout@v3
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCODE_COVERAGE=ON
+    
+    - name: Run coverage
+      run: |
+        cmake --build ${{github.workspace}}/build 
+        cmake --build ${{github.workspace}}/build --target ccov-UKLoggerLibTest > ~/coverage.txt 2>&1
+
+    - name: Show outputfile
+      run: more ~/coverage.txt
+
+    - name: Analyse coverage
+      run : |
+        import re
+        import os
+
+        output = ""
+        with open(os.path.join(os.path.expanduser('~'), "coverage.txt")) as file:
+            output += file.read()
+        
+        percentage = 0
+        covered_lines = 0
+        all_lines = 0
+        stringlist = output.splitlines()
+        found_overall_coverage_rate = False
+        for line in stringlist:
+            ret = re.search("Overall coverage rate:", line)
+            if ret:
+                found_overall_coverage_rate = True
+        
+            ret = re.search("lines......: ([0-9]+\.*[0-9]*)% \(([0-9]+\.*[0-9]*) of ([0-9]+\.*[0-9]*) lines\)", line)
+            if ret and found_overall_coverage_rate:
+                print("  ", ret.groups()[0])
+                print("  ", ret.groups()[1])
+                print("  ", ret.groups()[2])
+                percentage = ret.groups()[0]
+                covered_lines = ret.groups()[1]
+                all_lines = ret.groups()[2]
+        
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          file.write("coverage={}\n".format(percentage))
+          if 99 <= percentage:
+            file.write("coverage_color=green")
+          else:
+            if 95 <= percentage:
+              file.write("coverage_color=orange")
+            else:
+              file.write("coverage_color=red")
+
+      shell: python
+
+    - name: Coverage Badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ubuntu-latest-coverage.json
+        label: Doxygen
+        message: ${{ env.coverage }}
+        color: ${{ env.coverage_color }}
