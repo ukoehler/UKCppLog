@@ -80,5 +80,5 @@ jobs:
         gistID: 6935a607aff6233d996070495bba70b7
         filename: ubuntu-latest-coverage.json
         label: Doxygen
-        message: ${{ env.coverage }}
+        message: ${{ env.coverage }}%
         color: ${{ env.coverage_color }}

@@ -92,12 +92,13 @@
           <tr>
         <td></td>
          <td>
-            Documentation
+            Coverage / Documentation
         </td>       
         <td>
-            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-doxygen-warnings.json" />
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-coverage.json" />
         </td>    
         <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-doxygen-warnings.json" />
         </td>
         <td>
          </td>
