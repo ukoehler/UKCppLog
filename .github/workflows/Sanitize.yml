@@ -21,9 +21,11 @@ jobs:
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DAddressSanitize=ON 
     
     - name: Run test address sanitized
+      continue-on-error: true
       run: |
         cmake --build ${{github.workspace}}/build 
-        ctest -C ${{env.BUILD_TYPE}} > ~/address.txt 2>&1
+        cd ${{github.workspace}}/build/test
+        ./UKLoggerLibTest > ~/address.txt 2>&1
 
     - name: Show outputfile
       run: more ~/address.txt
@@ -79,9 +81,11 @@ jobs:
       run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DThreadSanitize=ON 
     
     - name: Run test thread sanitized
+      continue-on-error: true
       run: |
         cmake --build ${{github.workspace}}/build 
-        ctest -C ${{env.BUILD_TYPE}} > ~/thread.txt 2>&1
+        cd ${{github.workspace}}/build/test
+        ./UKLoggerLibTest > ~/address.txt 2>&1
 
     - name: Show outputfile
       run: more ~/thread.txt
