@@ -79,6 +79,6 @@ jobs:
         auth: ${{ secrets.GIST_SECRET }}
         gistID: 6935a607aff6233d996070495bba70b7
         filename: ubuntu-latest-coverage.json
-        label: Doxygen
+        label: Coverage
         message: ${{ env.coverage }}%
         color: ${{ env.coverage_color }}

@@ -30,6 +30,7 @@ include(HandleCompilerWarnings)
 include(CodeCoverage)
 include(Documentation)
 include(StaticCodeCheck)
+include(Sanitize)
 include(FetchContent)
 
 # the RPATH to be used when installing, but only if it's not a system directory

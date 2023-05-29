@@ -1,0 +1,130 @@
+name: sanitize
+
+on:
+  workflow_dispatch:
+
+env:
+    # Customize the CMake build type here (Release, Debug, RelWithDebInfo, etc.)
+    BUILD_TYPE: debug
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+
+    - uses: actions/checkout@v3
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DAddressSanitize=ON 
+    
+    - name: Run test address sanitized
+      run: |
+        cmake --build ${{github.workspace}}/build 
+        ctest -C ${{env.BUILD_TYPE}} > ~/address.txt 2>&1
+
+    - name: Show outputfile
+      run: more ~/address.txt
+
+    - name: Analyse coverage
+      run : |
+        import re
+        import os
+
+        output = ""
+        with open(os.path.join(os.path.expanduser('~'), "address.txt")) as file:
+            output += file.read()
+        
+        warning_count = 0
+        stringlist = output.splitlines()
+        for line in stringlist:
+            ret = re.search("==\d+==ERROR: AddressSanitizer: ", line)
+            if ret:
+                warning_count += 1
+            ret = re.search("==\d+==ERROR: LeakSanitizer: ", line)
+            if ret:
+                warning_count += 1
+            ret = re.search(":\d+:\d+: runtime error: ", line)
+            if ret:
+                warning_count += 1
+
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          file.write("address_warnings={}\n".format(warning_count))
+          if 0 == warning_count:
+            file.write("address_color=green")
+          else:
+            file.write("address_color=red")
+
+      shell: python
+
+    - name: Address Sanitizer Badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ubuntu-latest-address.json
+        label: Address
+        message: ${{ env.address_warnings }}%
+        color: ${{ env.address_color }}
+
+    - name: Cleanup
+      run: rm -rf ${{github.workspace}}/build/*
+
+    - name: Configure CMake
+      # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
+      # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DThreadSanitize=ON 
+    
+    - name: Run test thread sanitized
+      run: |
+        cmake --build ${{github.workspace}}/build 
+        ctest -C ${{env.BUILD_TYPE}} > ~/thread.txt 2>&1
+
+    - name: Show outputfile
+      run: more ~/thread.txt
+
+    - name: Thread coverage
+      run : |
+        import re
+        import os
+
+        output = ""
+        with open(os.path.join(os.path.expanduser('~'), "address.txt")) as file:
+            output += file.read()
+        
+        warning_count = 0
+        inside_region = False
+        stringlist = output.splitlines()
+        for line in stringlist:
+            ret = re.search("==================", line)
+            if ret:
+                inside_region = not inside_region
+            ret = re.search("WARNING: ThreadSanitizer: ", line)
+            if ret and inside_region:
+                warning_count += 1
+            ret = re.search("ERROR: ThreadSanitizer: ", line)
+            if ret:
+                warning_count += 1
+
+        env_file = os.getenv('GITHUB_ENV')
+        with open(env_file, "a") as file:
+          file.write("thread_warnings={}\n".format(warning_count))
+          if 0 == warning_count:
+            file.write("thread_color=green")
+          else:
+            file.write("thread_color=red")
+
+      shell: python
+
+    - name: Thread Sanitizer Badge
+      uses: schneegans/dynamic-badges-action@v1.6.0
+      with:
+        auth: ${{ secrets.GIST_SECRET }}
+        gistID: 6935a607aff6233d996070495bba70b7
+        filename: ubuntu-latest-thread.json
+        label: Thread
+        message: ${{ env.thread_warnings }}%
+        color: ${{ env.thread_color }}
