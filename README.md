@@ -89,7 +89,21 @@
             <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-drd-warnings.json" />
          </td>
      </tr>
-          <tr>
+     <tr>
+        <td></td>
+         <td>
+            GCC Sanitizers
+        </td>       
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-address.json" />
+        </td>    
+        <td>
+            <img src="https://img.shields.io/endpoint?url=https://gist.githubusercontent.com/ukoehler/6935a607aff6233d996070495bba70b7/raw/ubuntu-latest-thread.json" />
+        </td>
+        <td>
+         </td>
+     </tr>
+    <tr>
         <td></td>
          <td>
             Coverage / Documentation
@@ -107,4 +121,20 @@
 </table>
 
 [Doxygen documentation](https://ukoehler.github.io/UKCppLog/index.html) 
+
+## Table of contents
+- [Logging for Modern C++](#logging-for-modern-c)
+  - [Table of contents](#table-of-contents)
+  - [Motivation](#motivation)
+  - [Lessons](#lessons)
+  - [Usage](#usage)
+## Motivation
+I needed a logging library for C++ that allowed me to log the information I want and also doesn't leave the user looking for the log-files. At the same time this small projects seemed like the ideal candidate to learn about GitHub, GitHub Actions and Badges. I have always believed in using all available tools to write the safest code possible. Obviously the badges should reflect all those efforts.
+
+As can be seen by the badges above I use three compilers on three platforms with all compilers warnings enabled (and I mean all, even for GCC), unit testing with code coverage, static code checkers, sanitizers (Vagrind and GCC) and use Doxygen to generate the very important code documentation.
+## Lessons
+Well, is all the testing and checking effort overkill for a small project like this? As it turns out, not at all. The tools did point problems out to me that I wasn't aware of (and found quite a number of rants about the quality of C/C++ for). So, it was well worth the effort. The workflows can easily be used for more complex projects, as well.
+
+Most problems were pointed out by at least one compiler. The static code checkers also pointed them out, as well as Valgrind and the GCC sanitizers. Studies online do show, however, that none of those tools are enough on their own.
+## Usage
 

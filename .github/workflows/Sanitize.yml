@@ -69,7 +69,7 @@ jobs:
         gistID: 6935a607aff6233d996070495bba70b7
         filename: ubuntu-latest-address.json
         label: Address
-        message: ${{ env.address_warnings }}%
+        message: ${{ env.address_warnings }}
         color: ${{ env.address_color }}
 
     - name: Cleanup
@@ -130,5 +130,5 @@ jobs:
         gistID: 6935a607aff6233d996070495bba70b7
         filename: ubuntu-latest-thread.json
         label: Thread
-        message: ${{ env.thread_warnings }}%
+        message: ${{ env.thread_warnings }}
         color: ${{ env.thread_color }}
