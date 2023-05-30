@@ -57,7 +57,8 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     localtime_r(&timer, &tmStruct) ;  // POSIX
 #endif
     std::ostringstream stream;
-    stream << std::put_time(&tmStruct, "%Y.%m.%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << milliseconds.count();
+    stream << std::put_time(&tmStruct, "%Y.%m.%d %H:%M:%S") 
+           << '.' << std::setfill('0') << std::setw(3) << milliseconds.count();
     std::string timeStr  = stream.str();
     auto        threadID = std::this_thread::get_id();
     std::string function = func;

@@ -463,7 +463,7 @@ TEST(UKLOGGER, LogToFile) {
         // Check line 9
         std::filesystem::path expectedLogFileName(LOG_FOLDER);
         expectedLogFileName /= "TestUKLoggerFile.log";
-        checkLogLine(lines.at(8), timer, "WARN", "Startup", "uk::log::UKLogger::setLogfileName(...)", 138,
+        checkLogLine(lines.at(8), timer, "WARN", "Startup", "uk::log::UKLogger::setLogfileName(...)", 139,
                      "Logfile " + expectedLogFileName.u8string() + " exists. Deleting.");
 
         // Test thread safety and thread ids
@@ -525,7 +525,7 @@ TEST(UKLOGGER, LogToFileFailOpen) {
         checkLogLine(lines.at(2), timer, "INFO", "test main", "main(...)", 42, LOG_FOLDER);
         checkLogLine(lines.at(3), timer, "TRACE", "test class", "TestClass::testFunction(...)", 36,
                      "Enter int TestClass::testFunction(int) const");
-        checkLogLine(lines.at(4), timer, "FATAL", "Startup", "uk::log::UKLogger::setLogfileName(...)", 148,
+        checkLogLine(lines.at(4), timer, "FATAL", "Startup", "uk::log::UKLogger::setLogfileName(...)", 149,
                      std::string("Could not open logfile ") + logFileName.u8string() + ". Quitting.");
     }
 }
@@ -578,9 +578,9 @@ TEST(UKLOGGER, LogToFileCannotDelete) {
         checkLogLine(lines.at(2), timer, "INFO", "test main", "main(...)", 42, LOG_FOLDER);
         checkLogLine(lines.at(3), timer, "TRACE", "test class", "TestClass::testFunction(...)", 36,
                      "Enter int TestClass::testFunction(int) const");
-        checkLogLine(lines.at(4), timer, "WARN", "Startup", "uk::log::UKLogger::setLogfileName(...)", 138,
+        checkLogLine(lines.at(4), timer, "WARN", "Startup", "uk::log::UKLogger::setLogfileName(...)", 139,
                      std::string("Logfile ") + logFileName.u8string() + " exists. Deleting.");
-        checkLogLine(lines.at(5), timer, "FATAL", "Startup", "uk::log::UKLogger::setLogfileName(...)", 140,
+        checkLogLine(lines.at(5), timer, "FATAL", "Startup", "uk::log::UKLogger::setLogfileName(...)", 141,
                      std::string("Could not delete existing logfile ") + logFileName.u8string() + ". Quitting.");
     }
     std::filesystem::permissions(LOG_FOLDER, oldPerms, std::filesystem::perm_options::replace);

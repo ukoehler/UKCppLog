@@ -19,8 +19,8 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#ifndef UKLOGGER_HPP
-#define UKLOGGER_HPP
+#ifndef SRC_UKLOGGER_HPP_
+#define SRC_UKLOGGER_HPP_
 
 #include <fstream>
 #include <memory>
@@ -221,4 +221,4 @@ UKLogger& logger();
 #define UKLOG_FATAL(kind, message) \
     uk::log::logger().log("FATAL", kind, static_cast<const char*>(__PRETTY_FUNCTION__), message, __LINE__);
 
-#endif  // UKLOGGER_HPP
+#endif  // SRC_UKLOGGER_HPP_
