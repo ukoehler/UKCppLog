@@ -70,7 +70,8 @@ jobs:
                 if "UKCppLog/test" not in ret.groups()[0]:
                   # Fix lets the code crash
                   if "[-Wexit-time-destructors]" not in line:
-                    warning_count += 1
+                    if "should be initialized in the member initialization list" not in line:
+                      warning_count += 1
         print("warning_count", warning_count)
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:

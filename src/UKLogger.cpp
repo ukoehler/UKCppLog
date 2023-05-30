@@ -31,9 +31,9 @@
 #include <thread>
 
 namespace uk::log {
-UKLogger::UKLogger() : mMutex(), mInitialBuffer(""), mFileStream() {
+UKLogger::UKLogger() {
     log("INFO", "Startup", static_cast<const char*>(__PRETTY_FUNCTION__),
-        std::string("Create logger Version ") + VERSION_STRING, __LINE__);
+        std::string("Create logger Version ") + getVersion(), __LINE__);
 }
 
 UKLogger::~UKLogger() { moveToTerminal(); }
@@ -45,15 +45,20 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
 
     // get number of milliseconds for the current second
     // (remainder after division into seconds)
-    auto ms = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
 
     // convert to std::time_t in order to convert to std::tm (broken time)
     auto timer = std::chrono::system_clock::to_time_t(now);
 
-    std::tm tm = *std::localtime(&timer);
-    std::ostringstream s;
-    s << std::put_time(&tm, "%Y.%m.%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << ms.count();
-    std::string timeStr  = s.str();
+    std::tm tmStruct;
+#if (defined(_MSC_VER))
+    localtime_s(&tmStruct, &timer);
+#else
+    localtime_r(&timer, &tmStruct) ;  // POSIX
+#endif
+    std::ostringstream stream;
+    stream << std::put_time(&tmStruct, "%Y.%m.%d %H:%M:%S") << '.' << std::setfill('0') << std::setw(3) << milliseconds.count();
+    std::string timeStr  = stream.str();
     auto        threadID = std::this_thread::get_id();
     std::string function = func;
     // remove leading const
@@ -112,17 +117,17 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
         //             doubleColon = function.find("::");
         //         }
     }
-    s.clear();
-    s.str("");
-    s << std::setfill(' ') << timeStr << " " << std::left << std::setw(8) << severity << " "
+    stream.clear();
+    stream.str("");
+    stream << std::setfill(' ') << timeStr << " " << std::left << std::setw(8) << severity << " "
       << "[" << std::right << std::setw(6) << threadID << "] "
       << "(" << std::left << std::setw(20) << kind.substr(0, 20) << ") " << std::right << std::setw(47)
       << function.substr(0, 47) << " " << std::right << std::setw(6) << line << ": " << message << std::endl;
     std::lock_guard<std::mutex> lockGuard(mMutex);
     if (mFileOpen) {
-        mFileStream << s.str() << std::flush;
+        mFileStream << stream.str() << std::flush;
     } else {
-        mInitialBuffer += s.str();
+        mInitialBuffer += stream.str();
     }
 }
 

@@ -36,9 +36,11 @@ function(add_static_code_checks_to_target TARGET)
             # -llvmlibc-*: I only use CLANG for checking. These checks are useless to me
             # -llvm-header-guard: that header guard style is way too complex
             # -fuchsia-default-arguments-calls: cannot really be avoided when using STL
+            # -fuchsia-default-arguments-declarations: I disagree
             # -altera-unroll-loops: keeps things understandable
+            # -abseil-string-find-startswith: not using any library
             # -llvm-include-order: not the order I want and conflicts with cpplint
-            set_target_properties(${TARGET_LIB} PROPERTIES CXX_CLANG_TIDY "${CLANG-TIDY-EXE};-header-filter=UKCppLog;-checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-altera-unroll-loops,-llvm-include-order")
+            set_target_properties(${TARGET_LIB} PROPERTIES CXX_CLANG_TIDY "${CLANG-TIDY-EXE};-header-filter=UKCppLog;-checks=*,-modernize-use-trailing-return-type,-llvmlibc-*,-llvm-header-guard,-fuchsia-default-arguments-calls,-fuchsia-default-arguments-declaration,-altera-unroll-loops,-abseil-string-find-startswith,-llvm-include-order")
         endif()
         if(CPPCHECK-EXE)
             set_target_properties(${TARGET} PROPERTIES CXX_CPPCHECK "cppcheck;--enable=all;")
