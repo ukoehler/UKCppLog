@@ -188,7 +188,7 @@ jobs:
       if: matrix.os == 'ubuntu-latest'
       run: |
         cd ${{github.workspace}}/src
-        cppcheck --enable=all  *.cpp *.hpp > ~/cppcheck.txt 2>&1
+        cppcheck --enable=all --std=c++17  *.cpp *.hpp > ~/cppcheck.txt 2>&1
 
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
