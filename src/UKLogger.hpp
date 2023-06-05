@@ -19,6 +19,81 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+/*! \mainpage Basic C++ logger.
+ *
+ * \section intro_sec Introduction
+ * 
+ * This class allows for easy logging from C++ (via macros).
+ * Logging is available before entering
+ * the main() function into a std::string buffer and can be send to a
+ * log file or will be dumped after process execution to the command-line.
+ *
+ * \section install_sec Installation and Usage
+ * While this library can be installed (see \ref compile), it is meant to be 
+ * included in the CMakeLists.txt as an external reference.
+ *
+ * \subsection cmake CMake
+ * Add the following statements to your CMakeLists.txt:
+ * \code{.txt}
+ * FetchContent_Declare(
+ * ukcpplog
+ * GIT_REPOSITORY https://github.com/ukoehler/UKCppLog.git
+ * GIT_TAG        0dc2ef818a60750fae07357b21d763c5de11dfbd # tag 0.7
+ * )
+ * FetchContent_MakeAvailable(ukcpplog)
+ * \endcode
+ * (choose the latest tag) and then add the library to your targets. For example:
+ * \code{.txt}
+ * target_link_libraries(UKLoggerLibTest PRIVATE ukcpplog gtest)
+ * \endcode
+ * 
+ * \subsection compile Compile and Install
+ * All instructions are given for linux.
+ * 
+ * Clone the repository from GitHub.com
+ * \code{.txt}
+ * git clone https://github.com/ukoehler/UKCppLog.git
+ * cd UKCppLog
+ * \endcode
+ * 
+ * When configuring the project, the following definitions are important:
+ *  - -DCMAKE_BUILD_TYPE=Debug or Release
+ *  - -DBUILD_DOCUMENTATION=ON or OFF: Build this documentation or not
+ *  - -DCODE_CHECKS=ON or OFF: Enable static code checkers or not
+ *  - -DCODE_COVERAGE=ON or OFF: Enable or disable code coverage
+ *  - -DCMAKE_INSTALL_PREFIX=/usr/local: Set installation folder (optional)
+ * 
+ * Configure for a simple debug build with documentation would be 
+ * \code{.txt}
+ * mkdir build
+ * cd build 
+ * cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_DOCUMENTATION=ON -DCODE_CHECKS=OFF -DCODE_COVERAGE=OFF ..
+ * \endcode
+ * 
+ * Build and run tests with the following commands
+ * \code{.txt}
+ * make or cmake --build .
+ * cd test
+ * ./UKLoggerLibTest or ctest -C debug
+ * \endcode
+ * The documentation can be found in \code{.txt} build/doc \endcode
+ * 
+ * To install use 
+ * \code{.txt}
+ * make install or cmake --install . --prefix /my/install/prefix
+ * \endcode
+ * 
+ * When build with coverage support use the following to create a
+ * report (requires lcov):
+ * \code{.txt}
+ * cmake --build . --target ccov-UKLoggerLibTest
+ * \endcode
+ * The report will be in \code{.txt}ccov/UKLoggerLibTest/\endcode
+ * 
+ * \subsection usage Usage
+ * https://www.foonathan.net/2022/06/cmake-fetchcontent/
+ */
+
 #ifndef SRC_UKLOGGER_HPP_
 #define SRC_UKLOGGER_HPP_
 
@@ -36,12 +111,8 @@ namespace uk::log {
  * This class allows for easy logging from C++ (via macros).
  * Logging is available before entering
  * the main() function into a std::string buffer and can be send to a
- * log file or will be dumped after process execution to the commandline.
+ * log file or will be dumped after process execution to the command-line.
  *
- * When using a QObject by mEngine.rootContext()->setContextProperty("ukLogger", &uk::log::logger());
- * the singleton mechanism stops working and an additional instance is
- * created. Move all Signal/Slot mechanisms used in connection with QML
- * to UKLoggerObject.
  *
  * \remark This class is implemented as a singleton.
  * \remark In C++11 this class is fully thread save.
@@ -55,7 +126,7 @@ class UKLogger {
 
     /**
      * @brief Destructor.
-     * Dump logging to the command line if not file name has been set.
+     * Dump logging to the command line if no file name has been set.
      */
     virtual ~UKLogger();
 
@@ -81,7 +152,8 @@ class UKLogger {
     /**
      * @brief Set name of the logfile.
      * If the logfile does exist, it will be deleted first. Should that
-     * fail, the application will fail immediately.
+     * fail, the application will fail immediately. This is also the case if
+     * the log file cannot be opened.
      * @param [in] name Name of the logfile.
      * @pre None.
      * @post All subsequential logging is added to file.
@@ -91,8 +163,9 @@ class UKLogger {
     /**
      * @brief Set name of the logfile.
      * If the logfile does exist, it will be deleted first. Should that
-     * fail, the application will fail immediately.
-     * @param [in] name Name of the logfile.
+     * fail, the application will fail immediately. This is also the case if
+     * the log file cannot be opened.
+     * @param [in] name Name of the logfile as a std::path.
      * @pre None.
      * @post All subsequential logging is added to file.
      */
@@ -103,7 +176,7 @@ class UKLogger {
      * 
      * @return std::string: The version of the library.
      * @pre None.
-     * @post Log line added.
+     * @post None.
     */
     static std::string getVersion();
 
