@@ -1,6 +1,10 @@
 #Add a library
 
 add_library(ukcpplog STATIC UKLogger.cpp)
+target_include_directories(ukcpplog PUBLIC 
+    $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>  
+    $<INSTALL_INTERFACE:include>  # <prefix>/include/mylib
+)
 
 install(TARGETS ukcpplog 
     EXPORT ukcpplog

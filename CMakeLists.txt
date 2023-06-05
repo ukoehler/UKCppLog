@@ -58,7 +58,9 @@ endif()
 # add the CMakeFile that defines the application and library
 add_subdirectory(3rdparty)
 add_subdirectory(src)
-add_subdirectory(test)
+if(IN_ROOT)
+    add_subdirectory(test)
+endif()
 
 # General packaging support
 # Not used at the moment
