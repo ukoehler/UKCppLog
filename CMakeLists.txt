@@ -25,12 +25,19 @@ set(CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake ${CMAKE_MODULE_PATH})
 
 message(STATUS "CMAKE_PREFIX_PATH ${CMAKE_PREFIX_PATH}")
 
+if(CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+    Set(IN_ROOT TRUE)
+endif()
+message(STATUS "IN_ROOT ${IN_ROOT}")
+
 include(Utils)
 include(HandleCompilerWarnings)
-include(CodeCoverage)
-include(Documentation)
 include(StaticCodeCheck)
+include(CodeCoverage)
 include(Sanitize)
+if(IN_ROOT)
+    include(Documentation)
+endif()
 include(FetchContent)
 
 # the RPATH to be used when installing, but only if it's not a system directory
