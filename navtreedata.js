@@ -25,6 +25,14 @@
 var NAVTREE =
 [
   [ "UKCppLog", "index.html", [
+    [ "Basic C++ logger.", "index.html", [
+      [ "Introduction", "index.html#intro_sec", null ],
+      [ "Installation and Usage", "index.html#install_sec", [
+        [ "CMake", "index.html#cmake", null ],
+        [ "Compile and Install", "index.html#compile", null ],
+        [ "Usage", "index.html#usage", null ]
+      ] ]
+    ] ],
     [ "Namespaces", "namespaces.html", [
       [ "Namespace List", "namespaces.html", "namespaces_dup" ],
       [ "Namespace Members", "namespacemembers.html", [

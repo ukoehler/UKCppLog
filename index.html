@@ -5,7 +5,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=9"/>
 <meta name="generator" content="Doxygen 1.9.1"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>UKCppLog: Main Page</title>
+<title>UKCppLog: Basic C++ logger.</title>
 <link href="tabs.css" rel="stylesheet" type="text/css"/>
 <script type="text/javascript" src="jquery.js"></script>
 <script type="text/javascript" src="dynsections.js"></script>
@@ -81,11 +81,52 @@ $(document).ready(function(){initNavTree('index.html',''); initResizable(); });
 </iframe>
 </div>
 
-<div class="header">
+<div class="PageDoc"><div class="header">
   <div class="headertitle">
-<div class="title">UKCppLog Documentation</div>  </div>
+<div class="title">Basic C++ logger. </div>  </div>
 </div><!--header-->
 <div class="contents">
+<div class="textblock"><h1><a class="anchor" id="intro_sec"></a>
+Introduction</h1>
+<p>This class allows for easy logging from C++ (via macros). Logging is available before entering the main() function into a std::string buffer and can be send to a log file or will be dumped after process execution to the command-line.</p>
+<h1><a class="anchor" id="install_sec"></a>
+Installation and Usage</h1>
+<p>While this library can be installed (see <a class="el" href="index.html#compile">Compile and Install</a>), it is meant to be included in the CMakeLists.txt as an external reference.</p>
+<h2><a class="anchor" id="cmake"></a>
+CMake</h2>
+<p>Add the following statements to your CMakeLists.txt: </p><div class="fragment"><div class="line">FetchContent_Declare(</div>
+<div class="line">ukcpplog</div>
+<div class="line">GIT_REPOSITORY https:<span class="comment">//github.com/ukoehler/UKCppLog.git</span></div>
+<div class="line">GIT_TAG        0dc2ef818a60750fae07357b21d763c5de11dfbd # tag 0.7</div>
+<div class="line">)</div>
+<div class="line">FetchContent_MakeAvailable(ukcpplog)</div>
+</div><!-- fragment --><p> (choose the latest tag) and then add the library to your targets. For example: </p><div class="fragment"><div class="line">target_link_libraries(UKLoggerLibTest PRIVATE ukcpplog gtest)</div>
+</div><!-- fragment --><h2><a class="anchor" id="compile"></a>
+Compile and Install</h2>
+<p>All instructions are given for linux.</p>
+<p>Clone the repository from GitHub.com </p><div class="fragment"><div class="line">git clone https:<span class="comment">//github.com/ukoehler/UKCppLog.git</span></div>
+<div class="line">cd UKCppLog</div>
+</div><!-- fragment --><p>When configuring the project, the following definitions are important:</p><ul>
+<li>-DCMAKE_BUILD_TYPE=Debug or Release</li>
+<li>-DBUILD_DOCUMENTATION=ON or OFF: Build this documentation or not</li>
+<li>-DCODE_CHECKS=ON or OFF: Enable static code checkers or not</li>
+<li>-DCODE_COVERAGE=ON or OFF: Enable or disable code coverage</li>
+<li>-DCMAKE_INSTALL_PREFIX=/usr/local: Set installation folder (optional)</li>
+</ul>
+<p>Configure for a simple debug build with documentation would be </p><div class="fragment"><div class="line">mkdir build</div>
+<div class="line">cd build </div>
+<div class="line">cmake -DCMAKE_BUILD_TYPE=Debug -DBUILD_DOCUMENTATION=ON -DCODE_CHECKS=OFF -DCODE_COVERAGE=OFF ..</div>
+</div><!-- fragment --><p>Build and run tests with the following commands </p><div class="fragment"><div class="line">make or cmake --build .</div>
+<div class="line">cd test</div>
+<div class="line">./UKLoggerLibTest or ctest -C debug</div>
+</div><!-- fragment --><p> The documentation can be found in</p><div class="fragment"><div class="line">build/doc </div>
+</div><!-- fragment --><p>To install use </p><div class="fragment"><div class="line">make install or cmake --install . --prefix /my/install/prefix</div>
+</div><!-- fragment --><p>When build with coverage support use the following to create a report (requires lcov): </p><div class="fragment"><div class="line">cmake --build . --target ccov-UKLoggerLibTest</div>
+</div><!-- fragment --><p> The report will be in</p><div class="fragment"><div class="line">ccov/UKLoggerLibTest/</div>
+</div><!-- fragment --><h2><a class="anchor" id="usage"></a>
+Usage</h2>
+<p><a href="https://www.foonathan.net/2022/06/cmake-fetchcontent/">https://www.foonathan.net/2022/06/cmake-fetchcontent/</a> </p>
+</div></div><!-- PageDoc -->
 </div><!-- contents -->
 </div><!-- doc-content -->
 <!-- start footer part -->

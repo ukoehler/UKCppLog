@@ -1,4 +1,4 @@
 var searchData=
 [
-  ['getversion_1',['getVersion',['../classuk_1_1log_1_1_u_k_logger.html#a7ba5326b8d5f71a9c966304c517af810',1,'uk::log::UKLogger']]]
+  ['basic_20c_2b_2b_20logger_2e_1',['Basic C++ logger.',['../index.html',1,'']]]
 ];
