@@ -314,11 +314,11 @@ jobs:
       continue-on-error: true
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-main.xml --log-file=$HOME/valgrind-main.log ./UKLoggerLibTest
-        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-screen.xml --log-file=$HOME/valgrind-screen.log ./testukcpplogscreen
-        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-file.xml --log-file=$HOME/valgrind-file.log ./testukcpplogfile
-        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-delete.xml --log-file=$HOME/valgrind-delete.log ./testukcpplogfilecannotdelete
-        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-open.xml --log-file=$HOME/valgrind-open.log ./testukcpplogfilefailopen
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-main.xml --log-file=$HOME/valgrind-main.log ./UKLoggerLibTest && echo Success. || echo Failure
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-screen.xml --log-file=$HOME/valgrind-screen.log ./testukcpplogscreen && echo Success. || echo Failure
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-file.xml --log-file=$HOME/valgrind-file.log ./testukcpplogfile && echo Success. || echo Failure
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-delete.xml --log-file=$HOME/valgrind-delete.log ./testukcpplogfilecannotdelete && echo Success. || echo Failure
+        valgrind --trace-children=no --xml=yes --xml-file=$HOME/valgrind-open.xml --log-file=$HOME/valgrind-open.log ./testukcpplogfilefailopen && echo Success. || echo Failure
 
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
@@ -369,11 +369,11 @@ jobs:
       continue-on-error: true
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-main.xml --log-file=$HOME/helgrind-main.log ./UKLoggerLibTest
-        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-file.xml --log-file=$HOME/helgrind-file.log ./testukcpplogfile
-        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-screen.xml --log-file=$HOME/helgrind-screen.log ./testukcpplogscreen
-        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-delete.xml --log-file=$HOME/helgrind-delete.log ./testukcpplogfilecannotdelete
-        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-open.xml --log-file=$HOME/helgrind-open.log ./testukcpplogfilefailopen
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-main.xml --log-file=$HOME/helgrind-main.log ./UKLoggerLibTest && echo Success. || echo Failure
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-file.xml --log-file=$HOME/helgrind-file.log ./testukcpplogfile && echo Success. || echo Failure
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-screen.xml --log-file=$HOME/helgrind-screen.log ./testukcpplogscreen && echo Success. || echo Failure
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-delete.xml --log-file=$HOME/helgrind-delete.log ./testukcpplogfilecannotdelete && echo Success. || echo Failure
+        valgrind --tool=helgrind --trace-children=no --xml=yes --xml-file=$HOME/helgrind-open.xml --log-file=$HOME/helgrind-open.log ./testukcpplogfilefailopen && echo Success. || echo Failure
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
@@ -427,11 +427,11 @@ jobs:
       continue-on-error: true
       run: |
         cd ${{github.workspace}}/build/test
-        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-main.xml --log-file=$HOME/drd-main.log ./UKLoggerLibTest
-        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-file.xml --log-file=$HOME/drd-file.log ./testukcpplogfile
-        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-screen.xml --log-file=$HOME/drd-screen.log ./testukcpplogscreen
-        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-delete.xml --log-file=$HOME/drd-delete.log ./testukcpplogfilecannotdelete
-        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-open.xml --log-file=$HOME/drd-open.log ./testukcpplogfilefailopen
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-main.xml --log-file=$HOME/drd-main.log ./UKLoggerLibTest && echo Success. || echo Failure
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-file.xml --log-file=$HOME/drd-file.log ./testukcpplogfile && echo Success. || echo Failure
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-screen.xml --log-file=$HOME/drd-screen.log ./testukcpplogscreen && echo Success. || echo Failure
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-delete.xml --log-file=$HOME/drd-delete.log ./testukcpplogfilecannotdelete && echo Success. || echo Failure
+        valgrind --tool=drd --trace-children=no --xml=yes --xml-file=$HOME/drd-open.xml --log-file=$HOME/drd-open.log ./testukcpplogfilefailopen && echo Success. || echo Failure
         
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
