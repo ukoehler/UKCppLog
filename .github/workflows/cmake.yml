@@ -323,11 +323,11 @@ jobs:
     - name: Show outputfile
       if: matrix.os == 'ubuntu-latest'
       run: |
-        more ~/valgrind_main.xml
-        more ~/valgrind_screen.xml
-        more ~/valgrind_file.xml
-        more ~/valgrind_delete.xml
-        more ~/valgrind_open.xml
+        more ~/valgrind-main.xml
+        more ~/valgrind-screen.xml
+        more ~/valgrind-file.xml
+        more ~/valgrind-delete.xml
+        more ~/valgrind-open.xml
 
     - name: Analyse valgrind
       if: matrix.os == 'ubuntu-latest'

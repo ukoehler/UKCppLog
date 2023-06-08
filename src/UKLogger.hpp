@@ -38,13 +38,13 @@
  * FetchContent_Declare(
  * ukcpplog
  * GIT_REPOSITORY https://github.com/ukoehler/UKCppLog.git
- * GIT_TAG        0dc2ef818a60750fae07357b21d763c5de11dfbd # tag 0.7
+ * GIT_TAG        c2434e32d6cee677038c46c3cc965c4a9029515a # tag 0.7
  * )
  * FetchContent_MakeAvailable(ukcpplog)
  * \endcode
  * (choose the latest tag) and then add the library to your targets. For example:
  * \code{.txt}
- * target_link_libraries(UKLoggerLibTest PRIVATE ukcpplog gtest)
+ * target_link_libraries(target ... PRIVATE ukcpplog ...)
  * \endcode
  * 
  * \subsection compile Compile and Install
@@ -91,7 +91,65 @@
  * The report will be in \code{.txt}ccov/UKLoggerLibTest/\endcode
  * 
  * \subsection usage Usage
- * https://www.foonathan.net/2022/06/cmake-fetchcontent/
+ * \code{.cpp}
+ * #include "UKLogger.hpp"
+ * 
+ *  int main() {
+        // Anything logged before setting the logfile name will
+        // be stored and added to the file later
+        UKLOG_INFO("test main", LOG_FOLDER)
+
+        // The following line should be the only line printed directly to terminal.
+        std::cout << "Logging to " << logFileName << std::endl;
+        uk::log::logger().setLogfileName(logFileName);
+
+        UKLOG_DEBUG("test main", "Debug")
+        UKLOG_INFO("test main", "Info")
+        UKLOG_WARN("test main", "Warn")
+        UKLOG_ERROR("test main", "Error")
+        UKLOG_FATAL("test main", "Fatal")
+    }
+ * \endcode
+ * Logging is thread save.
+ * The following macros can be used for logging:
+ * \code{.cpp}
+ * UKLOG_ENTER(kind)
+ * \endcode
+ * used to trace entering a function. Kind can be anything like class name.
+
+ * \code{.cpp}
+ * UKLOG_LEAVE(kind)
+ * \endcode
+ * used to trace exiting a function without return value. 
+ * Kind can be anything like class name.
+
+ * \code{.cpp}
+ * UKLOG_LEAVE(kind, retval)
+ * \endcode
+ * used to trace exiting a function with return value. 
+ * Kind can be anything like class name. Retval is the returned value.
+
+ * \code{.cpp}
+ * UKLOG_DEBUG(kind, message)
+ * \endcode
+ * used to trace entering a function. Kind can be anything like class name.
+ * Message is any string to log. Replace DEBUG with one of the levels:
+ * DEBUG, INFO, WARN, ERROR, FATAL with increasing severity.
+
+ * \subsection output Sample Output
+ * \code{.txt}
+2023.06.06 21:05:34.897 INFO     [140447341827008] (Startup             )                uk::log::UKLogger::UKLogger(...)     36: Create logger Version 0.7
+2023.06.06 21:05:34.897 INFO     [140447341827008] (test main           )                                       main(...)     53: /var/data1/home/ukoehler/devel/C++/UKCppLog/test/../testdata/output
+2023.06.06 21:05:34.897 DEBUG    [140447341827008] (test main           )                                       main(...)     54: Debug
+2023.06.06 21:05:34.897 INFO     [140447341827008] (test main           )                                       main(...)     55: Info
+2023.06.06 21:05:34.897 WARN     [140447341827008] (test main           )                                       main(...)     56: Warn
+2023.06.06 21:05:34.897 ERROR    [140447341827008] (test main           )                                       main(...)     57: Error
+2023.06.06 21:05:34.897 FATAL    [140447341827008] (test main           )                                       main(...)     58: Fatal
+2023.06.06 21:05:34.897 TRACE    [140447341827008] (test class          )                    TestClass::testFunction(...)     36: Enter const int TestClass::testFunction(int) const
+2023.06.06 21:05:34.898 WARN     [140447341827008] (Startup             )          uk::log::UKLogger::setLogfileName(...)    139: Logfile /var/data1/home/ukoehler/devel/C++/UKCppLog/test/../testdata/output/TestUKLoggerFile.log exists. Deleting.
+2023.06.06 21:05:34.898 INFO     [140447326398016] (test main           )                                logTenTimes(...)     48: Logging number 0 from a thread.
+ * \endcode
+ * Given is the date and time, the severity, thread id, kind, function name, line number and the message.
  */
 
 #ifndef SRC_UKLOGGER_HPP_
