@@ -30,7 +30,8 @@ var NAVTREE =
       [ "Installation and Usage", "index.html#install_sec", [
         [ "CMake", "index.html#cmake", null ],
         [ "Compile and Install", "index.html#compile", null ],
-        [ "Usage", "index.html#usage", null ]
+        [ "Usage", "index.html#usage", null ],
+        [ "Sample Output", "index.html#output", null ]
       ] ]
     ] ],
     [ "Namespaces", "namespaces.html", [
