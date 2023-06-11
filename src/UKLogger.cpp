@@ -64,7 +64,7 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     auto        threadID = std::this_thread::get_id();
     std::string function = func;
     // remove leading const
-    int lenOfConst = std::string("const ").length();
+    std::size_t lenOfConst = std::string("const ").length();
     if (0 == function.find("const ")) {
         function.erase(0, lenOfConst);
     }
@@ -73,12 +73,12 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
         function.erase(function.size() - lenOfConst, lenOfConst);
     }
     // remove leading virtual
-    int lenOfVirtual = std::string("virtual ").length();
+    std::size_t lenOfVirtual = std::string("virtual ").length();
     if (0 == function.find("virtual ")) {
         function.erase(0, lenOfVirtual);
     }
     // remove leading static
-    int lenOfStatic = std::string("static ").length();
+    std::size_t lenOfStatic = std::string("static ").length();
     if (0 == function.find("static ")) {
         function.erase(0, lenOfStatic);
     }
@@ -96,7 +96,7 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
         function.insert(openingBraket + 1, "...");
     }
     // handle namespaces in function
-    int functionNameLength = 47;
+    std::size_t functionNameLength = 47;
     if (functionNameLength < function.size()) {
         unsigned int numberOfDoubleColons  = 0;
         size_t       nPos                  = 0;
@@ -125,10 +125,10 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     }
     stream.clear();
     stream.str("");
-    int severityLength = 8;
-    int threadIDLength = 6;
-    int kindLength = 20;
-    int lineLength = 6;
+    std::size_t severityLength = 8;
+    std::size_t threadIDLength = 6;
+    std::size_t kindLength = 20;
+    std::size_t lineLength = 6;
     stream << std::setfill(' ') << timeStr << " " << std::left << std::setw(severityLength) << severity << " "
       << "[" << std::right << std::setw(threadIDLength) << threadID << "] "
       << "(" << std::left << std::setw(kindLength) << kind.substr(0, kindLength) << ") " 
