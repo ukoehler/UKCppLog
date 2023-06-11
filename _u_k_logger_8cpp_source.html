@@ -152,7 +152,7 @@ $(document).ready(function(){initNavTree('_u_k_logger_8cpp_source.html',''); ini
 <div class="line"><a name="l00064"></a><span class="lineno">   64</span>&#160;    <span class="keyword">auto</span>        threadID = std::this_thread::get_id();</div>
 <div class="line"><a name="l00065"></a><span class="lineno">   65</span>&#160;    std::string <span class="keyword">function</span> = func;</div>
 <div class="line"><a name="l00066"></a><span class="lineno">   66</span>&#160;    <span class="comment">// remove leading const</span></div>
-<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    <span class="keywordtype">int</span> lenOfConst = std::string(<span class="stringliteral">&quot;const &quot;</span>).length();</div>
+<div class="line"><a name="l00067"></a><span class="lineno">   67</span>&#160;    std::size_t lenOfConst = std::string(<span class="stringliteral">&quot;const &quot;</span>).length();</div>
 <div class="line"><a name="l00068"></a><span class="lineno">   68</span>&#160;    <span class="keywordflow">if</span> (0 == <span class="keyword">function</span>.find(<span class="stringliteral">&quot;const &quot;</span>)) {</div>
 <div class="line"><a name="l00069"></a><span class="lineno">   69</span>&#160;        <span class="keyword">function</span>.erase(0, lenOfConst);</div>
 <div class="line"><a name="l00070"></a><span class="lineno">   70</span>&#160;    }</div>
@@ -161,12 +161,12 @@ $(document).ready(function(){initNavTree('_u_k_logger_8cpp_source.html',''); ini
 <div class="line"><a name="l00073"></a><span class="lineno">   73</span>&#160;        <span class="keyword">function</span>.erase(<span class="keyword">function</span>.size() - lenOfConst, lenOfConst);</div>
 <div class="line"><a name="l00074"></a><span class="lineno">   74</span>&#160;    }</div>
 <div class="line"><a name="l00075"></a><span class="lineno">   75</span>&#160;    <span class="comment">// remove leading virtual</span></div>
-<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    <span class="keywordtype">int</span> lenOfVirtual = std::string(<span class="stringliteral">&quot;virtual &quot;</span>).length();</div>
+<div class="line"><a name="l00076"></a><span class="lineno">   76</span>&#160;    std::size_t lenOfVirtual = std::string(<span class="stringliteral">&quot;virtual &quot;</span>).length();</div>
 <div class="line"><a name="l00077"></a><span class="lineno">   77</span>&#160;    <span class="keywordflow">if</span> (0 == <span class="keyword">function</span>.find(<span class="stringliteral">&quot;virtual &quot;</span>)) {</div>
 <div class="line"><a name="l00078"></a><span class="lineno">   78</span>&#160;        <span class="keyword">function</span>.erase(0, lenOfVirtual);</div>
 <div class="line"><a name="l00079"></a><span class="lineno">   79</span>&#160;    }</div>
 <div class="line"><a name="l00080"></a><span class="lineno">   80</span>&#160;    <span class="comment">// remove leading static</span></div>
-<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    <span class="keywordtype">int</span> lenOfStatic = std::string(<span class="stringliteral">&quot;static &quot;</span>).length();</div>
+<div class="line"><a name="l00081"></a><span class="lineno">   81</span>&#160;    std::size_t lenOfStatic = std::string(<span class="stringliteral">&quot;static &quot;</span>).length();</div>
 <div class="line"><a name="l00082"></a><span class="lineno">   82</span>&#160;    <span class="keywordflow">if</span> (0 == <span class="keyword">function</span>.find(<span class="stringliteral">&quot;static &quot;</span>)) {</div>
 <div class="line"><a name="l00083"></a><span class="lineno">   83</span>&#160;        <span class="keyword">function</span>.erase(0, lenOfStatic);</div>
 <div class="line"><a name="l00084"></a><span class="lineno">   84</span>&#160;    }</div>
@@ -184,7 +184,7 @@ $(document).ready(function(){initNavTree('_u_k_logger_8cpp_source.html',''); ini
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">function</span>.insert(openingBraket + 1, <span class="stringliteral">&quot;...&quot;</span>);</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// handle namespaces in function</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keywordtype">int</span> functionNameLength = 47;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::size_t functionNameLength = 47;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span> (functionNameLength &lt; <span class="keyword">function</span>.size()) {</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numberOfDoubleColons  = 0;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordtype">size_t</span>       nPos                  = 0;</div>
@@ -213,10 +213,10 @@ $(document).ready(function(){initNavTree('_u_k_logger_8cpp_source.html',''); ini
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    stream.clear();</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    stream.str(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">int</span> severityLength = 8;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">int</span> threadIDLength = 6;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">int</span> kindLength = 20;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">int</span> lineLength = 6;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    std::size_t severityLength = 8;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    std::size_t threadIDLength = 6;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    std::size_t kindLength = 20;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    std::size_t lineLength = 6;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    stream &lt;&lt; std::setfill(<span class="charliteral">&#39; &#39;</span>) &lt;&lt; timeStr &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; std::left &lt;&lt; std::setw(severityLength) &lt;&lt; severity &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;      &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; std::right &lt;&lt; std::setw(threadIDLength) &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;] &quot;</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; std::left &lt;&lt; std::setw(kindLength) &lt;&lt; kind.substr(0, kindLength) &lt;&lt; <span class="stringliteral">&quot;) &quot;</span> </div>
