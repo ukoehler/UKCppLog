@@ -45,12 +45,13 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
 
     // get number of milliseconds for the current second
     // (remainder after division into seconds)
-    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % 1000;
+    int millisToSeconds = 1000;
+    auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % millisToSeconds;
 
     // convert to std::time_t in order to convert to std::tm (broken time)
     auto timer = std::chrono::system_clock::to_time_t(now);
 
-    std::tm tmStruct;
+    std::tm tmStruct = {0};
 #if (defined(_MSC_VER))
     localtime_s(&tmStruct, &timer);
 #else
@@ -63,20 +64,23 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     auto        threadID = std::this_thread::get_id();
     std::string function = func;
     // remove leading const
+    int lenOfConst = std::string("const ").length();
     if (0 == function.find("const ")) {
-        function.erase(0, 6);
+        function.erase(0, lenOfConst);
     }
     // remove trailing const
     if (function.size() - 6 == function.rfind(" const")) {
-        function.erase(function.size() - 6, 6);
+        function.erase(function.size() - lenOfConst, lenOfConst);
     }
     // remove leading virtual
+    int lenOfVirtual = std::string("virtual ").length();
     if (0 == function.find("virtual ")) {
-        function.erase(0, 8);
+        function.erase(0, lenOfVirtual);
     }
     // remove leading static
+    int lenOfStatic = std::string("static ").length();
     if (0 == function.find("static ")) {
-        function.erase(0, 7);
+        function.erase(0, lenOfStatic);
     }
     // remove function return declaration for non-constructors
     size_t openingBraket = function.find('(');
@@ -92,7 +96,8 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
         function.insert(openingBraket + 1, "...");
     }
     // handle namespaces in function
-    if (47 < function.size()) {
+    int functionNameLength = 47;
+    if (functionNameLength < function.size()) {
         unsigned int numberOfDoubleColons  = 0;
         size_t       nPos                  = 0;
         size_t       lastDoubleColon       = 0;
@@ -103,11 +108,11 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
             lastDoubleColon       = nPos;
             nPos += 2;
         }
-        if (47 > (function.size() - secondLastDoubleColon + 1)) {
+        if (functionNameLength > (function.size() - secondLastDoubleColon + 1)) {
             function.erase(0, secondLastDoubleColon + 2);
             function = "..." + function;
         } else {
-            if (47 > (function.size() - lastDoubleColon + 1)) {
+            if (functionNameLength > (function.size() - lastDoubleColon + 1)) {
                 function.erase(0, lastDoubleColon + 2);
                 function = "..." + function;
             }
@@ -120,10 +125,16 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     }
     stream.clear();
     stream.str("");
-    stream << std::setfill(' ') << timeStr << " " << std::left << std::setw(8) << severity << " "
-      << "[" << std::right << std::setw(6) << threadID << "] "
-      << "(" << std::left << std::setw(20) << kind.substr(0, 20) << ") " << std::right << std::setw(47)
-      << function.substr(0, 47) << " " << std::right << std::setw(6) << line << ": " << message << std::endl;
+    int severityLength = 8;
+    int threadIDLength = 6;
+    int kindLength = 20;
+    int lineLength = 6;
+    stream << std::setfill(' ') << timeStr << " " << std::left << std::setw(severityLength) << severity << " "
+      << "[" << std::right << std::setw(threadIDLength) << threadID << "] "
+      << "(" << std::left << std::setw(kindLength) << kind.substr(0, kindLength) << ") " 
+      << std::right << std::setw(functionNameLength)
+      << function.substr(0, functionNameLength) << " " << std::right << std::setw(lineLength) << line << ": " 
+      << message << std::endl;
     std::lock_guard<std::mutex> lockGuard(mMutex);
     if (mFileOpen) {
         mFileStream << stream.str() << std::flush;
