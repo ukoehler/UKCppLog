@@ -71,9 +71,9 @@ jobs:
                   # Fix lets the code crash
                   if "[-Wexit-time-destructors]" not in line:
                     if "should be initialized in the member initialization list" not in line:
-                      if "missing initializer for member ‘tm::" not in line:
-                        if "missing field 'tm_min' initializer" not in line:
-                          warning_count += 1
+                      ret = re.search("missing initializer for member .tm::tm_", line)
+                      if not ret:
+                        warning_count += 1
         print("warning_count", warning_count)
         env_file = os.getenv('GITHUB_ENV')
         with open(env_file, "a") as file:
