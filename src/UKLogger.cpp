@@ -125,15 +125,15 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     }
     stream.clear();
     stream.str("");
-    std::size_t severityLength = 8;
-    std::size_t threadIDLength = 6;
-    std::size_t kindLength = 20;
-    std::size_t lineLength = 6;
+    int severityLength = 8;
+    int threadIDLength = 6;
+    int kindLength = 20;
+    int lineLength = 6;
     stream << std::setfill(' ') << timeStr << " " << std::left << std::setw(severityLength) << severity << " "
       << "[" << std::right << std::setw(threadIDLength) << threadID << "] "
-      << "(" << std::left << std::setw(kindLength) << kind.substr(0, kindLength) << ") " 
-      << std::right << std::setw(functionNameLength)
-      << function.substr(0, functionNameLength) << " " << std::right << std::setw(lineLength) << line << ": " 
+      << "(" << std::left << std::setw(kindLength) << kind.substr(0, static_cast<size_t>(kindLength)) << ") "
+      << std::right << std::setw(static_cast<int>(functionNameLength))
+      << function.substr(0, functionNameLength) << " " << std::right << std::setw(lineLength) << line << ": "
       << message << std::endl;
     std::lock_guard<std::mutex> lockGuard(mMutex);
     if (mFileOpen) {
