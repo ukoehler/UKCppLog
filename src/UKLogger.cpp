@@ -69,7 +69,7 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
         function.erase(0, lenOfConst);
     }
     // remove trailing const
-    if (function.size() - 6 == function.rfind(" const")) {
+    if (function.size() - lenOfConst == function.rfind(" const")) {
         function.erase(function.size() - lenOfConst, lenOfConst);
     }
     // remove leading virtual
