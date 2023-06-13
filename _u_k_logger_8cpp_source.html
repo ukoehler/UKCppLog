@@ -133,7 +133,7 @@ $(document).ready(function(){initNavTree('_u_k_logger_8cpp_source.html',''); ini
 <div class="line"><a name="l00045"></a><span class="lineno">   45</span>&#160; </div>
 <div class="line"><a name="l00046"></a><span class="lineno">   46</span>&#160;    <span class="comment">// get number of milliseconds for the current second</span></div>
 <div class="line"><a name="l00047"></a><span class="lineno">   47</span>&#160;    <span class="comment">// (remainder after division into seconds)</span></div>
-<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keywordtype">int</span> millisToSeconds = 1000;</div>
+<div class="line"><a name="l00048"></a><span class="lineno">   48</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> millisToSeconds = 1000;</div>
 <div class="line"><a name="l00049"></a><span class="lineno">   49</span>&#160;    <span class="keyword">auto</span> milliseconds = std::chrono::duration_cast&lt;std::chrono::milliseconds&gt;(now.time_since_epoch()) % millisToSeconds;</div>
 <div class="line"><a name="l00050"></a><span class="lineno">   50</span>&#160; </div>
 <div class="line"><a name="l00051"></a><span class="lineno">   51</span>&#160;    <span class="comment">// convert to std::time_t in order to convert to std::tm (broken time)</span></div>
@@ -184,7 +184,7 @@ $(document).ready(function(){initNavTree('_u_k_logger_8cpp_source.html',''); ini
 <div class="line"><a name="l00096"></a><span class="lineno">   96</span>&#160;        <span class="keyword">function</span>.insert(openingBraket + 1, <span class="stringliteral">&quot;...&quot;</span>);</div>
 <div class="line"><a name="l00097"></a><span class="lineno">   97</span>&#160;    }</div>
 <div class="line"><a name="l00098"></a><span class="lineno">   98</span>&#160;    <span class="comment">// handle namespaces in function</span></div>
-<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    std::size_t functionNameLength = 47;</div>
+<div class="line"><a name="l00099"></a><span class="lineno">   99</span>&#160;    <span class="keyword">const</span> std::size_t functionNameLength = 47;</div>
 <div class="line"><a name="l00100"></a><span class="lineno">  100</span>&#160;    <span class="keywordflow">if</span> (functionNameLength &lt; <span class="keyword">function</span>.size()) {</div>
 <div class="line"><a name="l00101"></a><span class="lineno">  101</span>&#160;        <span class="keywordtype">unsigned</span> <span class="keywordtype">int</span> numberOfDoubleColons  = 0;</div>
 <div class="line"><a name="l00102"></a><span class="lineno">  102</span>&#160;        <span class="keywordtype">size_t</span>       nPos                  = 0;</div>
@@ -213,10 +213,10 @@ $(document).ready(function(){initNavTree('_u_k_logger_8cpp_source.html',''); ini
 <div class="line"><a name="l00125"></a><span class="lineno">  125</span>&#160;    }</div>
 <div class="line"><a name="l00126"></a><span class="lineno">  126</span>&#160;    stream.clear();</div>
 <div class="line"><a name="l00127"></a><span class="lineno">  127</span>&#160;    stream.str(<span class="stringliteral">&quot;&quot;</span>);</div>
-<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keywordtype">int</span> severityLength = 8;</div>
-<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keywordtype">int</span> threadIDLength = 6;</div>
-<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keywordtype">int</span> kindLength = 20;</div>
-<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keywordtype">int</span> lineLength = 6;</div>
+<div class="line"><a name="l00128"></a><span class="lineno">  128</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> severityLength = 8;</div>
+<div class="line"><a name="l00129"></a><span class="lineno">  129</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> threadIDLength = 6;</div>
+<div class="line"><a name="l00130"></a><span class="lineno">  130</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> kindLength = 20;</div>
+<div class="line"><a name="l00131"></a><span class="lineno">  131</span>&#160;    <span class="keyword">const</span> <span class="keywordtype">int</span> lineLength = 6;</div>
 <div class="line"><a name="l00132"></a><span class="lineno">  132</span>&#160;    stream &lt;&lt; std::setfill(<span class="charliteral">&#39; &#39;</span>) &lt;&lt; timeStr &lt;&lt; <span class="stringliteral">&quot; &quot;</span> &lt;&lt; std::left &lt;&lt; std::setw(severityLength) &lt;&lt; severity &lt;&lt; <span class="stringliteral">&quot; &quot;</span></div>
 <div class="line"><a name="l00133"></a><span class="lineno">  133</span>&#160;      &lt;&lt; <span class="stringliteral">&quot;[&quot;</span> &lt;&lt; std::right &lt;&lt; std::setw(threadIDLength) &lt;&lt; threadID &lt;&lt; <span class="stringliteral">&quot;] &quot;</span></div>
 <div class="line"><a name="l00134"></a><span class="lineno">  134</span>&#160;      &lt;&lt; <span class="stringliteral">&quot;(&quot;</span> &lt;&lt; std::left &lt;&lt; std::setw(kindLength) &lt;&lt; kind.substr(0, <span class="keyword">static_cast&lt;</span><span class="keywordtype">size_t</span><span class="keyword">&gt;</span>(kindLength)) &lt;&lt; <span class="stringliteral">&quot;) &quot;</span></div>
