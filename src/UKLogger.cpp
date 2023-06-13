@@ -45,7 +45,7 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
 
     // get number of milliseconds for the current second
     // (remainder after division into seconds)
-    int millisToSeconds = 1000;
+    const int millisToSeconds = 1000;
     auto milliseconds = std::chrono::duration_cast<std::chrono::milliseconds>(now.time_since_epoch()) % millisToSeconds;
 
     // convert to std::time_t in order to convert to std::tm (broken time)
@@ -96,7 +96,7 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
         function.insert(openingBraket + 1, "...");
     }
     // handle namespaces in function
-    std::size_t functionNameLength = 47;
+    const std::size_t functionNameLength = 47;
     if (functionNameLength < function.size()) {
         unsigned int numberOfDoubleColons  = 0;
         size_t       nPos                  = 0;
@@ -125,10 +125,10 @@ void UKLogger::log(const std::string& severity, const std::string& kind, const s
     }
     stream.clear();
     stream.str("");
-    int severityLength = 8;
-    int threadIDLength = 6;
-    int kindLength = 20;
-    int lineLength = 6;
+    const int severityLength = 8;
+    const int threadIDLength = 6;
+    const int kindLength = 20;
+    const int lineLength = 6;
     stream << std::setfill(' ') << timeStr << " " << std::left << std::setw(severityLength) << severity << " "
       << "[" << std::right << std::setw(threadIDLength) << threadID << "] "
       << "(" << std::left << std::setw(kindLength) << kind.substr(0, static_cast<size_t>(kindLength)) << ") "
